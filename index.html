@@ -1,0 +1,38 @@
+<!DOCTYPE html>
+<html>
+    <head>
+        <title>Platformer Game</title>
+        <meta charset = 'UTF-8'>
+        <style>
+            body {
+                margin: 0;
+                overflow: hidden;
+                background-color: black;
+            }
+            canvas {
+                top: 50%;
+                left: 50%;
+                position: absolute;
+                transform: translate(-50%, -50%);
+            }
+            #text {
+                position: absolute;
+                text-align: center;
+                color: white;
+                font-family: 'Times New Roman', Times, serif;
+                font-size: 42px;
+                letter-spacing: 1px;
+                top: calc(50% + 350px);
+                left: 50%;
+                transform: translate(-50%, -50%);
+            }
+        </style>
+    </head>
+    <body>
+        <canvas></canvas>
+        <div id = 'text'>A - Left, D - Right, Space - Jump</div>
+        <script src = 'playerMechanics.js'></script>
+        <script src = 'levels.js'></script>
+        <script src = 'canvas.js'></script>
+    </body>
+</html>
