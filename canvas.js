@@ -163,7 +163,7 @@ function animate() {
         text.innerText = 'A - Left, D - Right, Space - Jump'
     }
     else {
-        text.innerText = ''
+        text.innerText = `Level: ${player.level}`
     }
 }
 
@@ -196,6 +196,7 @@ function devModeLevelUp() {
         player.y = canvas.height / 2 - player.height / 2
         player.velocity.x = 0
         player.velocity.y = 0
+        player.level -= 1
         gravity = 0
         clearTimeout(gravityTimeout)
         gravityTimeout = setTimeout(gravityRestore, 2000)
@@ -215,6 +216,7 @@ function devModeLevelDown() {
         player.y = 300 - player.height / 2
         player.velocity.x = 0
         player.velocity.y = 0
+        player.level += 1
         gravity = 0
         clearTimeout(gravityTimeout)
         gravityTimeout = setTimeout(gravityRestore, 2000)

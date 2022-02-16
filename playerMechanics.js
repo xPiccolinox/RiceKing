@@ -56,6 +56,7 @@ function playerMechanics() {
             return player.x + player.width > platform.x &&
             player.x < platform.x + platform.width &&
             player.velocity.y > 0 &&
+            player.velocity.y != 5.5 &&
             player.velocity.y != 6.1 &&
             player.y + player.height + player.velocity.y >= platform.y &&
             player.y + player.height + player.velocity.y <= platform.y + 20
@@ -72,6 +73,7 @@ function playerMechanics() {
             player.y < platform.y + platform.height - 1 &&
             player.x + player.width + player.velocity.x >= platform.x &&
             player.x + player.width + player.velocity.x <= platform.x + platform.width - 1 &&
+            player.velocity.y != 5.5 &&
             player.velocity.y != 6.1
         }
         function playerPlatformCollisionFromRight(player, platform) {
@@ -79,6 +81,7 @@ function playerMechanics() {
             player.y <= platform.y + platform.height - 1 &&
             player.x + player.velocity.x <= platform.x + platform.width &&
             player.x + player.velocity.x >= platform.x + platform.width - platform.width + 1 &&
+            player.velocity.y != 5.5 &&
             player.velocity.y != 6.1
         }
         if (playerPlatformCollisionFromTop(player, platform)) {
@@ -105,12 +108,14 @@ function playerMechanics() {
             player.velocity.x *= 0.3
         }
         else if (playerPlatformCollisionFromLeft(player, platform)) {
-            player.x = platform.x - player.width
-            player.velocity.x = -4
+            player.x = platform.x - player.width - 1
+            if (player.velocity.y !== 0) player.velocity.x = -4
+            else if (player.velocity.y === 0) player.velocity.x = 0
         }
         else if (playerPlatformCollisionFromRight(player, platform)) {
-            player.x = platform.x + platform.width
-            player.velocity.x = 4
+            player.x = platform.x + platform.width + 1
+            if (player.velocity.y !== 0) player.velocity.x = 4
+            else if (player.velocity.y === 0) player.velocity.x = 0
         }
         else {
             player.onPlatform = false
@@ -142,6 +147,8 @@ function playerMechanics() {
                 return player.x + player.width > slide.x2 &&
                 player.x < slide.x1 &&
                 player.velocity.y > 0 &&
+                player.velocity.y != 5.5 &&
+                player.velocity.y != 6.1 &&
                 player.y + player.height + player.velocity.y >= slide.y2 &&
                 player.y + player.height + player.velocity.y <= slide.y2 + 20
             }
@@ -167,7 +174,8 @@ function playerMechanics() {
             }
             else if (playerSlideTopRightCollisionFromRight(player, slide)) {
                 player.x = slide.x1
-                player.velocity.x = 0
+                if (player.velocity.y !== 0) player.velocity.x = 4
+                else if (player.velocity.y === 0) player.velocity.x = 0
             }
             else if (playerSlideTopRightCollisionSlide(player, slide)) {
                 player.y = slide.y2 + Math.abs(slide.x2 - player.x - player.width) / (slide.x1 - slide.x2) * (slide.y1 - slide.y2)
@@ -184,6 +192,8 @@ function playerMechanics() {
                 return player.x + player.width > slide.x1 &&
                 player.x + player.velocity.x < slide.x2 &&
                 player.velocity.y > 0 &&
+                player.velocity.y != 5.5 &&
+                player.velocity.y != 6.1 &&
                 player.y + player.height + player.velocity.y >= slide.y2 &&
                 player.y + player.height + player.velocity.y <= slide.y2 + 20
             }
@@ -209,7 +219,8 @@ function playerMechanics() {
             }
             else if (playerSlideTopLeftCollisionFromLeft(player, slide)) {
                 player.x = slide.x1 - player.width
-                player.velocity.x = 0
+                if (player.velocity.y !== 0) player.velocity.x = -4
+                else if (player.velocity.y === 0) player.velocity.x = 0
             }
             else if (playerSlideTopLeftCollisionSlide(player, slide)) {
                 player.y = slide.y2 - Math.abs(slide.x2 - player.x) / (slide.x2 - slide.x1) * (slide.y2 - slide.y1)
@@ -250,7 +261,8 @@ function playerMechanics() {
             }
             else if (playerSlideBottomRightCollisionFromRight(player, slide)) {
                 player.x = slide.x1
-                player.velocity.x = 0
+                if (player.velocity.y !== 0) player.velocity.x = 4
+                else if (player.velocity.y === 0) player.velocity.x = 0
             }
             else if (playerSlideBottomRightCollisionFromSlide(player, slide)) {
                 if (player.x + player.width > slide.x2 && player.x + player.width < slide.x1) {
@@ -303,7 +315,8 @@ function playerMechanics() {
             }
             else if (playerSlideBottomLeftCollisionFromLeft(player, slide)) {
                 player.x = slide.x1 - player.width
-                player.velocity.x = 0
+                if (player.velocity.y !== 0) player.velocity.x = -4
+                else if (player.velocity.y === 0) player.velocity.x = 0
             }
             else if (playerSlideBottomLeftCollisionSlide(player, slide)) {
                 if (player.x > slide.x1 && player.x < slide.x2) {

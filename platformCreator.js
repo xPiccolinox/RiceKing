@@ -393,9 +393,10 @@ function mouseOutPlatform(id) {
     // Copy all platforms to Clipboard
 function copyToClipboard() {
     copyString = ''
-    for (let i = 0; i < platformVar.childNodes.length; i++) {
-        copyString = copyString + platformVar.childNodes[i].innerText + '\n'
-    }
+    platformVar.childNodes.forEach ((childNode, index) => {
+        if (index === 0) copyString = copyString + childNode.innerText
+        else copyString = copyString + '\n' + childNode.innerText
+    })
     navigator.clipboard.writeText(copyString);
 }
     // Import platforms
