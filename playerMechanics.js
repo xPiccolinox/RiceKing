@@ -34,9 +34,11 @@ function playerMechanics() {
                 slide.y1 += 600
                 slide.y2 += 600
             })
+            winds.forEach(wind => {
+                wind.y += 600
+            })
             player.y = 599 - player.height / 2
             player.level += 1
-            console.log(player.level)
         // Level down
         } else if (player.y + player.height / 2 > 600) {
             platforms.forEach (platform => {
@@ -46,10 +48,12 @@ function playerMechanics() {
                 slide.y1 -= 600
                 slide.y2 -= 600
             })
+            winds.forEach(wind => {
+                wind.y -= 600
+            })
             player.y = 1 + player.height / 2
             player.level -= 1
         }
-
     // Player collision detection with every platform
     platforms.forEach(platform => {
         function playerPlatformCollisionFromTop(player, platform) {
@@ -92,7 +96,7 @@ function playerMechanics() {
             } else if (platform.surface === 1) {
                 player.velocity.x = 0
                 player.move = 1
-                platform.color = 'rgba(157, 237, 252, 1)'
+                platform.color = 'rgba(120, 255, 237, 1)'
             } else if (platform.surface === 2) {
                 player.velocity.x *= 0.98
                 player.move = 2
@@ -118,14 +122,9 @@ function playerMechanics() {
             else if (player.velocity.y === 0) player.velocity.x = 0
         }
         else {
-            player.onPlatform = false
-            if (platform.surface === 0) {
-                platform.color = 'rgba(255, 255, 255, 1)'
-            } else if (platform.surface === 1) {
-                platform.color = 'rgba(191, 245, 255, 1)'
-            } else if (platform.surface === 2) {
-                platform.color = 'rgba(26, 184, 237, 1)'
-            }
+            if (platform.surface === 0) platform.color = 'rgba(255, 255, 255, 1)'
+            else if (platform.surface === 1) platform.color = 'rgba(184, 255, 246, 1)'
+            else if (platform.surface === 2) platform.color = 'rgba(86, 190, 245, 1)'
         }
     })
     // Player collision with every slide
@@ -183,7 +182,6 @@ function playerMechanics() {
                 player.velocity.y = -0.4
             }
             else {
-                player.onPlatform = false
                 slide.color = 'rgba(255, 255, 255, 1)'
             }
         }
@@ -228,7 +226,6 @@ function playerMechanics() {
                         player.velocity.y = -0.4
             }
             else {
-                player.onPlatform = false
                 slide.color = 'rgba(255, 255, 255, 1)'
             }
         }
@@ -283,7 +280,6 @@ function playerMechanics() {
                 }
             }
             else {
-                player.onPlatform = false
                 slide.color = 'rgba(255, 255, 255, 1)'
             }
         }
@@ -337,8 +333,29 @@ function playerMechanics() {
                 }
             }
             else {
-                player.onPlatform = false
                 slide.color = 'rgba(255, 255, 255, 1)'
+            }
+        }
+    })
+    // Player in wind
+    winds.forEach(wind => {
+        function playerInWind(wind) {
+            return player.y + player.height >= wind.y &&
+            player.y <= wind.y + wind.height
+        }
+        if (playerInWind(wind)) {
+            player.inWind = true
+            // Player on normal or ice platform
+            if (player.onPlatform === true && player.move !== 1) {
+                player.velocity.x = windForce * 0.1
+            }
+            // Player on snow
+            else if (player.onPlatform === true && player.move === 1) {
+                player.velocity.x = 0
+            }
+            // Player in mid-air
+            else if (player.onPlatform === false) {
+                player.velocity.x += windForce * 0.05
             }
         }
     })
@@ -372,11 +389,6 @@ function playerMechanics() {
     if (keys.space.pressed && player.velocity.y == 0) {
         player.color = 'green'
         player.velocityCharge += 0.3
-        if (player.move === 0) {
-            player.velocity.x = 0
-        } else if (player.move === 2) {
-            player.velocity.x = player.velocity.x
-        }
         player.jumpCharge = true
         // Auto-jump if velocityCharge > 18
             // Jump left
@@ -406,10 +418,10 @@ function playerMechanics() {
             // Jump straight up (neither left or right is being hold)
         } else if (keys.space.pressed && !keys.left.pressed && !keys.right.pressed && player.velocityCharge >= 18) {
             player.velocity.y = -18
-            player.velocity.x = player.velocity.x
             player.color = 'red'
             player.velocityCharge = 0
             keys.space.pressed = false
+            player.jumpCharge = false
         }
         // Jump if 'SPACE' isn't being hold anymore
             // Jump left
@@ -442,9 +454,21 @@ function playerMechanics() {
         player.velocityCharge = 0
     }
     // Player bounce of the wall if in mid-air and collided
-    if (player.velocity.x == 0 && player.velocity.y != 0 && player.previousVelocity > 1 && player.jumpCharge === false && player.onPlatform === false) {
+    if (player.velocity.x == 0 && player.velocity.y != 0 && player.previousVelocity > 1 && player.jumpCharge === false) {
         player.velocity.x = -4
-    } else if (player.velocity.x == 0 && player.velocity.y != 0 && player.previousVelocity < 1 && player.jumpCharge === false && player.onPlatform === false) {
+    } else if (player.velocity.x == 0 && player.velocity.y != 0 && player.previousVelocity < -1 && player.jumpCharge === false) {
         player.velocity.x = 4
     }
+    if (player.inWind === true && player.y > 0 && player.y + player.height < canvas.height) {
+        windParticles.forEach(windParticle => {
+            windParticle.color = 'rgba(255, 255, 255, 1)'
+        })        
+    }
+    else {
+        windParticles.forEach(windParticle => {
+        windParticle.color = 'rgba(255, 255, 255, 0)'
+        })
+    }
+    player.onPlatform = false
+    player.inWind = false
 }

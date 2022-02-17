@@ -5,8 +5,8 @@ function initPlatforms() {
     slides.push(new Slide(680, 390, 580, 495, -1))
     slides.push(new Slide(140, 180, 240, 75, -1))
     slides.push(new Slide(680, 180, 580, 75, -1))
-    platforms.push(new Platform(500, 255, 260, 45, -1, 0))
-    platforms.push(new Platform(60, 255, 260, 45, -1, 0))
+    platforms.push(new Platform(500, 255, 260, 45, -1, 2))
+    platforms.push(new Platform(60, 255, 260, 45, -1, 1))
     platforms.push(new Platform(140, 495, 100, 75, -1, 0))
     platforms.push(new Platform(580, 495, 100, 75, -1, 0))
     // Level 0

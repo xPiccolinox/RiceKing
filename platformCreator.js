@@ -4,6 +4,7 @@ const platformVar = document.getElementById('platformVar')
 const importPlatformsText = document.getElementById('importPlatformsText')
 const levelInput = document.getElementById('level')
 const levelText = document.getElementById('levelText')
+const levelButton = document.getElementById('levelButton')
 const level = document.getElementById('level')
 const map = document.getElementById('map')
 
@@ -30,6 +31,7 @@ let slide
 let slides = []
 let platformSurface = 0
 let mapImage
+let levelButtonInterval
 
 //  Event Listeners
 addEventListener('mousemove', (event) => {
@@ -172,14 +174,20 @@ class Rectangle {
 }
 
 class RectangleDraw {
-    constructor (x, y, w, h, id) {
+    constructor (x, y, w, h, id, platformSurface) {
         this.x = x
         this.y = y
         this.w = w
         this.h = h
         this.id = id
-        this.color = 'rgba(120, 200, 255, 0.3)'
-
+        this.surface = platformSurface
+        if (this.surface == 0) {
+            this.color = 'rgba(255, 210, 97, 0.3)'
+        } else if (this.surface == 1) {
+            this.color = 'rgba(120, 255, 237, 0.3)'
+        } else if (this.surface == 2) {
+            this.color = 'rgba(0, 148, 227, 0.3)'
+        }
     }
 
     draw() {
@@ -231,7 +239,7 @@ class SlideDraw {
         this.x2 = x2
         this.y2 = y2
         this.id = id
-        this.color = 'rgba(120, 200, 255, 0.3)'
+        this.color = 'rgba(189, 140, 255, 0.3)'
     }
 
     draw() {
@@ -291,12 +299,15 @@ function levelChange() {
                 div.innerHTML = `slides.push(new Slide(${stringArr[0]}, ${stringArr[1]}, ${stringArr[2]}, ${stringArr[3]}, ${platformLevel})) <div onclick = 'removePlatform(this)'>X</div>`
             }
         })
+        clearInterval(levelButtonInterval)
+        levelButton.style.backgroundColor = 'rgb(41, 83, 173)'
+        levelInput.style.backgroundColor = 'rgb(54, 54, 54)'
     }
 }
     // Add platform to the list
 function addPlatform() {
     if (platformSlide === false) {
-        rectangles.push(new RectangleDraw(rectangle.rx, rectangle.ry, rectangle.rw, rectangle.rh, platform_id))
+        rectangles.push(new RectangleDraw(rectangle.rx, rectangle.ry, rectangle.rw, rectangle.rh, platform_id, platformSurface))
         div = document.createElement(`div`)
         div.id = `platform_${platform_id}`
         div.setAttribute('onMouseOver', 'mouseOverPlatform(id)')
@@ -362,7 +373,7 @@ function changePlatformSurface(id) {
         platformSurface = 2
     }
 }
-    // Highlight rectangle while mouse over its <div>
+    // Highlight rectangle if mouse is over its <div>
 function mouseOverPlatform(id) {
     getId = id.slice(id.indexOf('_') + 1)
     for (let i = 0; i < rectangles.length; i++) {
@@ -379,16 +390,22 @@ function mouseOverPlatform(id) {
     // Unhighlight
 function mouseOutPlatform(id) {
     getId = id.slice(id.indexOf('_') + 1)
-    for (let i = 0; i < rectangles.length; i++) {
-        if (rectangles[i].id == getId) {
-            rectangles[i].color = 'rgba(120, 200, 255, 0.3)'
+    rectangles.forEach(rectangle => {
+        if (rectangle.id == getId) {
+            if (rectangle.surface === 0) {
+                rectangle.color = 'rgba(255, 210, 97, 0.3)'
+            } else if (rectangle.surface === 1) {
+                rectangle.color = 'rgba(120, 255, 237, 0.3)'
+            } else if (rectangle.surface === 2) {
+                rectangle.color = 'rgba(0, 148, 227, 0.3)'
+            }
         }
-    }
-    for (let i = 0; i < slides.length; i++) {
-        if (slides[i].id == getId) {
-            slides[i].color = 'rgba(120, 200, 255, 0.3)'
+    })
+    slides.forEach(slide => {
+        if (slide.id == getId) {
+                slide.color = 'rgba(189, 140, 255, 0.3)'
         }
-    }
+    })
 }
     // Copy all platforms to Clipboard
 function copyToClipboard() {
@@ -420,7 +437,8 @@ function importPlatforms() {
         if (string.slice(0, 1) === 'p') {
             string = string.slice(string.indexOf('m(') + 2, string.indexOf(')'))
             let stringArr = string.split(', ')
-            rectangles.push(new RectangleDraw(stringArr[0], stringArr[1], stringArr[2], stringArr[3], platform_id))
+            rectangles.push(new RectangleDraw(stringArr[0], stringArr[1], stringArr[2], stringArr[3], platform_id, stringArr[5]))
+            console.log(stringArr)
             div = document.createElement(`div`)
             div.id = `platform_${platform_id}`
             div.setAttribute('onMouseOver', 'mouseOverPlatform(id)')
@@ -446,6 +464,27 @@ function importPlatforms() {
         }
     })
     importPlatformsText.value = ''
+    function levelButtonFlash() {
+        if (levelButton.style.backgroundColor == 'rgb(201, 139, 7)') {
+            levelButton.style.color = 'white'
+            levelButton.style.backgroundColor = 'rgb(41, 83, 173)'
+            levelInput.style.backgroundColor = 'rgb(54, 54, 54)'
+        }
+        else if (levelButton.style.backgroundColor == 'rgb(41, 83, 173)') {
+            levelButton.style.color = 'black'
+            levelButton.style.backgroundColor = 'rgb(201, 139, 7)'
+            levelInput.style.backgroundColor = 'rgb(65, 65, 65)'
+        }
+        else {
+            levelButton.style.color = 'black'
+            levelButton.style.backgroundColor = 'rgb(201, 139, 7)'
+            levelInput.style.backgroundColor = 'rgb(65, 65, 65)'
+        }
+    }
+    clearInterval(levelButtonInterval)
+    levelButton.style.backgroundColor = 'rgb(41, 83, 173)'
+    levelInput.style.backgroundColor = 'rgb(54, 54, 54)'
+    levelButtonInterval = setInterval(levelButtonFlash, 700)
 }
     // Scroll or change background opacity
 function mapScrollOpacity(id) {

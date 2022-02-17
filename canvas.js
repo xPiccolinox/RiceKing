@@ -20,6 +20,10 @@ const keys = {
 }
 const platforms = []
 const slides = []
+const winds = []
+const windParticles = []
+let windForce = 0
+let windAcceleration = 0
 let gravity = 0.6
 
 //  Player movement buttons
@@ -66,9 +70,10 @@ class Player {
         }
         this.previousVelocity = 0
         this.jumpCharge = false
-        this.onPlatform = true
+        this.onPlatform = false
         this.sliding = false
-        this.move = true
+        this.inWind = false
+        this.move = 0
         this.level = 0
     }
 
@@ -99,10 +104,11 @@ class Platform {
         this.height = height
         this.color = 'white'
         this.surface = surface
+        this.playerOnPlatform = false
         if (surface === undefined) this.surface = 0
-        if (this.surface === 0) this.color = 'rgba(255, 244, 217, 1)'
-        else if (this.surface === 1) this.color = 'rgba(191, 245, 255, 1)'
-        else if (this.surface === 2) this.color = 'rgba(26, 184, 237, 1)'
+        if (this.surface === 0) this.color = 'rgba(255, 255, 255, 1)'
+        else if (this.surface === 1) this.color = 'rgba(184, 255, 246, 1)'
+        else if (this.surface === 2) this.color = 'rgba(86, 190, 245, 1)'
     }
 
     draw() {
@@ -144,6 +150,56 @@ class Slide {
     }
 }
 
+// Wind
+class Wind {
+    constructor (level) {
+        this.level = level
+        this.x = 0
+        this.y = 0 - 600 * this.level
+        this.width = 800
+        this.height = 600
+    }
+
+    draw() {
+        c.beginPath()
+        c.fillStyle = 'rgba(255, 0, 0, 0.2)'
+        c.fillRect(this.x, this.y, this.width, this.height)
+        c.closePath()
+    }
+
+    update() {
+        this.draw()
+    }
+}
+
+// Wind Particle
+class WindParticle {
+    constructor () {
+        this.x = Math.random() * canvas.width
+        this.y = Math.random() * canvas.height
+        this.radius = Math.random() * 3 + 2
+        this.randomVelocity = Math.random()
+        this.color = 'rgba(255, 255, 255, 1)'
+    }
+
+    draw() {
+        c.beginPath()
+        c.fillStyle = this.color
+        c.arc(this.x, this.y, this.radius, 0, Math.PI * 2, false)
+        c.fill()
+        c.closePath()
+    }
+
+    update() {
+        this.draw()
+        if (this.y > canvas.height) this.y = 1
+        this.y += 0.5 + (this.randomVelocity / 3)
+        if (this.x > canvas.width) this.x = 1
+        else if (this.x < 0) this.x = canvas.width - 1
+        this.x += windForce * 2 + (this.randomVelocity / 2 * windForce)
+    }
+}
+
 // Animate canvas
 function animate() {
     requestAnimationFrame(animate)
@@ -159,16 +215,31 @@ function animate() {
     slides.forEach(slide => {
         slide.update()
     })
+
+    winds.forEach(wind => {
+        wind.update()
+    })
+
+    windParticles.forEach(particle => {
+        particle.update()
+    })
+
     if (player.level === 0) {
         text.innerText = 'A - Left, D - Right, Space - Jump'
     }
     else {
         text.innerText = `Level: ${player.level}`
     }
+    windAcceleration += 0.018
+    if (windAcceleration == Math.PI * 2) windAcceleration = 0
+    windForce = Math.cos(windAcceleration) * 7
 }
 
 // Initiate everything
 const player = new Player(canvas.width / 2 - 20, canvas.height - 300, 40, 50, 'red')
+for (let i = 0; i < 100; i++) {
+    windParticles.push(new WindParticle())
+}
 initPlatforms()
 animate()
 
@@ -192,6 +263,9 @@ function devModeLevelUp() {
             slide.y1 -= 600
             slide.y2 -= 600
         })
+        winds.forEach(wind => {
+            wind.y -= 600
+        })
         player.x = canvas.width / 2 - player.width / 2
         player.y = canvas.height / 2 - player.height / 2
         player.velocity.x = 0
@@ -211,6 +285,9 @@ function devModeLevelDown() {
         slides.forEach (slide => {
             slide.y1 += 600
             slide.y2 += 600
+        })
+        winds.forEach(wind => {
+            wind.y += 600
         })
         player.x = 400 - player.width / 2
         player.y = 300 - player.height / 2
