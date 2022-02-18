@@ -7,10 +7,10 @@ const levelText = document.getElementById('levelText')
 const levelButton = document.getElementById('levelButton')
 const level = document.getElementById('level')
 const map = document.getElementById('map')
+const windButton = document.getElementById('wind')
 
 canvas.width = 800
 canvas.height = 600
-
 
 //  Variables
 let mouse = {
@@ -32,13 +32,16 @@ let slides = []
 let platformSurface = 0
 let mapImage
 let levelButtonInterval
+let wind = false
+let windParticles = []
+let windForce = 0
+let windAcceleration = 0
 
 //  Event Listeners
 addEventListener('mousemove', (event) => {
     mouse.x = event.clientX - window.getComputedStyle(canvas).left.slice(0, window.getComputedStyle(canvas).left.indexOf('px')) + canvas.width / 2,
     mouse.y = event.clientY - window.getComputedStyle(canvas).top.slice(0, window.getComputedStyle(canvas).top.indexOf('px')) + canvas.height / 2
 })
-
 addEventListener('click', (event) => {
     clickSwitch = !clickSwitch
     if (clickSwitch === true) {
@@ -76,7 +79,6 @@ class Line {
         this.draw()
     }
 }
-
 class Point {
     constructor (x, y) {
         this.x = x
@@ -128,7 +130,6 @@ class Point {
         else if (this.colorValue === 1) this.color = 'rgba(107, 96, 65, 1)'
     }
 }
-
 class Rectangle {
     constructor (x, x2, y, y2) {
         this.x = x
@@ -172,7 +173,6 @@ class Rectangle {
         }
     }
 }
-
 class RectangleDraw {
     constructor (x, y, w, h, id, platformSurface) {
         this.x = x
@@ -201,7 +201,6 @@ class RectangleDraw {
         this.draw()
     }
 }
-
 class Slide {
     constructor (x, x2, y, y2) {
         this.x = x
@@ -231,7 +230,6 @@ class Slide {
         }
     }
 }
-
 class SlideDraw {
     constructor (x, y, x2, y2, id) {
         this.x = x
@@ -257,7 +255,6 @@ class SlideDraw {
         this.draw()
     }
 }
-
 class Image {
     constructor (src) {
         this.src = src
@@ -277,6 +274,32 @@ class Image {
 
     update() {
         this.draw()
+    }
+}
+class WindParticle {
+    constructor () {
+        this.x = Math.random() * canvas.width
+        this.y = Math.random() * canvas.height
+        this.radius = Math.random() * 2 + 2
+        this.randomVelocity = Math.random()
+        this.color = 'rgba(255, 255, 255, 0)'
+    }
+
+    draw() {
+        c.beginPath()
+        c.fillStyle = this.color
+        c.arc(this.x, this.y, this.radius, 0, Math.PI * 2, false)
+        c.fill()
+        c.closePath()
+    }
+
+    update() {
+        this.draw()
+        if (this.y > canvas.height) this.y = 1
+        this.y += 0.2 + (this.randomVelocity / 4)
+        if (this.x > canvas.width) this.x = 1
+        else if (this.x < 0) this.x = canvas.width - 1
+        this.x += windForce * 2 + (this.randomVelocity / 2 * windForce)
     }
 }
 
@@ -345,32 +368,43 @@ function removePlatform(remove) {
 function changePlatformType(id) {
     if (id === 'platformType1') {
         platformSlide = false
-        document.getElementById('platformType1').style.backgroundColor = 'rgb(41, 83, 173)'
-        document.getElementById('platformType2').style.backgroundColor = 'rgb(51, 51, 51)'
+        if (platformSurface === 0) document.getElementById('platformType1').style.backgroundColor = 'rgb(243, 189, 52)'
+        if (platformSurface === 1) document.getElementById('platformType1').style.backgroundColor = 'rgb(59, 217, 196)'
+        if (platformSurface === 2) document.getElementById('platformType1').style.backgroundColor = 'rgb(53, 172, 232)'
+        document.getElementById('platformType2').style.backgroundColor = 'rgb(66, 66, 66)'
+        document.getElementById('platformSurface1').style.filter = 'brightness(100%)'
+        document.getElementById('platformSurface2').style.filter = 'brightness(100%)'
+        document.getElementById('platformSurface3').style.filter = 'brightness(100%)'
     }
     else if (id === 'platformType2') {
         platformSlide = true
-        document.getElementById('platformType1').style.backgroundColor = 'rgb(51, 51, 51)'
-        document.getElementById('platformType2').style.backgroundColor = 'rgb(41, 83, 173)'
+        document.getElementById('platformType1').style.backgroundColor = 'rgb(66, 66, 66)'
+        document.getElementById('platformType2').style.backgroundColor = 'rgb(142, 96, 204)'
+        document.getElementById('platformSurface1').style.filter = 'brightness(50%)'
+        document.getElementById('platformSurface2').style.filter = 'brightness(50%)'
+        document.getElementById('platformSurface3').style.filter = 'brightness(50%)'
     }
 }
     // Change platform surface - Normal / Snow / Ice
 function changePlatformSurface(id) {
     if (id === 'platformSurface1') {
-        document.getElementById('platformSurface1').style.backgroundColor = 'rgb(41, 83, 173)'
-        document.getElementById('platformSurface2').style.backgroundColor = 'rgb(51, 51, 51)'
-        document.getElementById('platformSurface3').style.backgroundColor = 'rgb(51, 51, 51)'
         platformSurface = 0
+        if (platformSlide === false) document.getElementById('platformType1').style.backgroundColor = 'rgb(243, 189, 52)'
+        document.getElementById('platformSurface1').style.backgroundColor = 'rgb(243, 189, 52)'
+        document.getElementById('platformSurface2').style.backgroundColor = 'rgb(66, 66, 66)'
+        document.getElementById('platformSurface3').style.backgroundColor = 'rgb(66, 66, 66)'
     } else if (id === 'platformSurface2') {
-        document.getElementById('platformSurface1').style.backgroundColor = 'rgb(51, 51, 51)'
-        document.getElementById('platformSurface2').style.backgroundColor = 'rgb(41, 83, 173)'
-        document.getElementById('platformSurface3').style.backgroundColor = 'rgb(51, 51, 51)'
         platformSurface = 1
+        if (platformSlide === false) document.getElementById('platformType1').style.backgroundColor = 'rgb(59, 217, 196)'
+        document.getElementById('platformSurface1').style.backgroundColor = 'rgb(66, 66, 66)'
+        document.getElementById('platformSurface2').style.backgroundColor = 'rgb(59, 217, 196)'
+        document.getElementById('platformSurface3').style.backgroundColor = 'rgb(66, 66, 66)'
     } else if (id === 'platformSurface3') {
-        document.getElementById('platformSurface1').style.backgroundColor = 'rgb(51, 51, 51)'
-        document.getElementById('platformSurface2').style.backgroundColor = 'rgb(51, 51, 51)'
-        document.getElementById('platformSurface3').style.backgroundColor = 'rgb(41, 83, 173)'
         platformSurface = 2
+        if (platformSlide === false) document.getElementById('platformType1').style.backgroundColor = 'rgb(53, 172, 232)'
+        document.getElementById('platformSurface1').style.backgroundColor = 'rgb(66, 66, 66)'
+        document.getElementById('platformSurface2').style.backgroundColor = 'rgb(66, 66, 66)'
+        document.getElementById('platformSurface3').style.backgroundColor = 'rgb(53, 172, 232)'
     }
 }
     // Highlight rectangle if mouse is over its <div>
@@ -407,11 +441,33 @@ function mouseOutPlatform(id) {
         }
     })
 }
+    // Turn wind ON / OFF
+function windSwitch() {
+    if (wind === false) {
+        wind = true
+        windButton.innerText = 'Wind: ON'
+        windButton.style.backgroundColor = 'rgb(38, 66, 34)'
+        windParticles.forEach(windParticle => {
+            windParticle.color = 'rgba(255, 255, 255, 0.2)'
+        })
+    }
+    else if (wind === true) {
+        wind = false
+        windButton.innerText = 'Wind: OFF'
+        windButton.style.backgroundColor = 'rgb(51, 29, 29)'
+        windParticles.forEach(windParticle => {
+            windParticle.color = 'rgba(255, 255, 255, 0.0)'
+        })
+    }
+}
     // Copy all platforms to Clipboard
 function copyToClipboard() {
     copyString = ''
+    if (wind === true) {
+        copyString = `winds.push(new Wind(${platformLevel}))`
+    }
     platformVar.childNodes.forEach ((childNode, index) => {
-        if (index === 0) copyString = copyString + childNode.innerText
+        if (index === 0 && wind === false) copyString = copyString + childNode.innerText
         else copyString = copyString + '\n' + childNode.innerText
     })
     navigator.clipboard.writeText(copyString);
@@ -512,6 +568,9 @@ function init() {
             points.push(new Point(x, y))
         }
     }
+    for (let i = 0; i < 200; i++) {
+        windParticles.push(new WindParticle())
+    }
     rectangle = new Rectangle(0, 0, 0, 0)
     slide = new Slide(0, 0, 0, 0)
     image = new Image(map)
@@ -524,6 +583,10 @@ function animate() {
     c.fillRect(0, 0, canvas.width, canvas.height)
 
     image.update()
+
+    windParticles.forEach(particle => {
+        particle.update()
+    })
 
     lines.forEach(line => {
         line.update()
@@ -544,6 +607,10 @@ function animate() {
     slides.forEach(slide => {
         slide.update()
     })
+
+    windAcceleration += 0.01
+    if (windAcceleration == Math.PI * 2) windAcceleration = 0
+    windForce = Math.cos(windAcceleration)
 }
 
 init()

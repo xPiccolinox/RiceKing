@@ -17,7 +17,7 @@ canvas {
     text-align: center;
     top: calc(50% - 300px);
     left: 50%;
-    transform: translate(-50%, -150%);
+    transform: translate(-50%, -200%);
     position: absolute;
 }
 #map {
@@ -112,7 +112,7 @@ canvas {
     filter: brightness(125%);
 }
 #copyToClipboard {
-    background-color: rgb(201, 139, 7);
+    background-color: rgb(226, 160, 19);
     width: 10%;
     height: 55px;
     position: absolute;
@@ -211,7 +211,7 @@ canvas {
 }
 /* Right panel - button */
 #importPlatformsButton {
-    background-color: rgb(201, 139, 7);
+    background-color: rgb(226, 160, 19);
     width: 25%;
     height: 55px;
     position: absolute;
@@ -287,6 +287,20 @@ canvas {
 #scrollDown:active {
     filter: brightness(125%);
 }
+/* Middle panel top - button 'wind' */
+#wind {
+    background-color: rgb(51, 29, 29);
+    width: 40%;
+    height: 100%;
+    float: left;
+    padding-top: 6px;
+}
+#wind:hover {
+    filter: brightness(120%);
+}
+#wind:active {
+    filter: brightness(130%);
+}
 /* Middle panel top - opacity div */
 #opacityDiv {
     background-color: rgb(34, 34, 34);
@@ -336,11 +350,11 @@ canvas {
     user-select: none;
 }
 #changePlatformType > div {
+    color: rgb(0, 0, 0);
     box-sizing: border-box;
     text-align: center;
     padding-top: 11px;
     font-size: 28px;
-    color: black;
     user-select: none;
 }
 #changePlatformType > div:hover {
@@ -351,7 +365,7 @@ canvas {
 }
 /* Middle panel bottom - button platformType1 */
 #platformType1 {
-    background-color: rgb(41, 83, 173);
+    background-color: rgb(243, 189, 52);
     width: 50%;
     height: 100%;
     position: relative;
@@ -359,7 +373,7 @@ canvas {
 }
 /* Middle panel bottom - button platformType2 */
 #platformType2 {
-    background-color: rgb(51, 51, 51);
+    background-color: rgb(66, 66, 66);
     width: 50%;
     height: 100%;
     position: relative;
@@ -377,11 +391,11 @@ canvas {
     user-select: none;
 }
 #changePlatformSurface > div {
+    color: rgb(0, 0, 0);
     box-sizing: border-box;
     text-align: center;
     padding-top: 11px;
     font-size: 28px;
-    color: black;
     user-select: none;
 }
 #changePlatformSurface > div:hover {
@@ -392,7 +406,7 @@ canvas {
 }
 /* Middle panel bottom - button platformSurface1 */
 #platformSurface1 {
-    background-color: rgb(41, 83, 173);
+    background-color: rgb(243, 189, 52);
     width: calc(100% / 3);
     height: 100%;
     position: relative;
@@ -400,7 +414,7 @@ canvas {
 }
 /* Middle panel bottom - button platformSurface2 */
 #platformSurface2 {
-    background-color: rgb(51, 51, 51);
+    background-color: rgb(66, 66, 66);
     width: calc(100% / 3);
     height: 100%;
     position: relative;
@@ -408,7 +422,7 @@ canvas {
 }
 /* Middle panel bottom - button platformSurface3 */
 #platformSurface3 {
-    background-color: rgb(51, 51, 51);
+    background-color: rgb(66, 66, 66);
     width: calc(100% / 3);
     height: 100%;
     position: relative;

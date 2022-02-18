@@ -19,19 +19,20 @@
             <div id = 'scrollDown' onclick = 'mapScrollOpacity(id)'>-</div>
             <div id = 'scrollDiv'>Scroll</div>
             <div id = 'scrollUp' onclick = 'mapScrollOpacity(id)'>+</div>
+            <div id = 'wind' onclick = 'windSwitch()'>Wind: OFF</div>
             <div id = 'opacityUp' onclick = 'mapScrollOpacity(id)'>+</div>
             <div id = 'opacityDiv'>Opacity</div>
             <div id = 'opacityDown' onclick = 'mapScrollOpacity(id)'>-</div>
         </div>
-            <div id = 'changePlatformType'>
-                <div id = 'platformType1' onclick = 'changePlatformType(id)'>Platform</div>
-                <div id = 'platformType2' onclick = 'changePlatformType(id)'>Slide</div>
-            </div>
-            <div id = 'changePlatformSurface'>
-                <div id = 'platformSurface1' onclick = 'changePlatformSurface(id)'>Normal</div>
-                <div id = 'platformSurface2' onclick = 'changePlatformSurface(id)'>Snow</div>
-                <div id = 'platformSurface3' onclick = 'changePlatformSurface(id)'>Ice</div>
-            </div>
+        <div id = 'changePlatformType'>
+            <div id = 'platformType1' onclick = 'changePlatformType(id)'>Platform</div>
+            <div id = 'platformType2' onclick = 'changePlatformType(id)'>Slide</div>
+        </div>
+        <div id = 'changePlatformSurface'>
+            <div id = 'platformSurface1' onclick = 'changePlatformSurface(id)'>Normal</div>
+            <div id = 'platformSurface2' onclick = 'changePlatformSurface(id)'>Snow</div>
+            <div id = 'platformSurface3' onclick = 'changePlatformSurface(id)'>Ice</div>
+        </div>
         <textarea id = 'importPlatformsText' placeholder = 'Paste whole level string here&#10;&#10;Example:&#10;platforms.push(new Platform(120, 165, 160, 180, 0))&#10;platforms.push(new Platform(60, 240, 150, 90, 0))&#10;platforms.push(new Platform(360, 285, 40, 120, 16, 0))&#10;slides.push(new Slide(400, 240, 360, 285, 16))&#10;slides.push(new Slide(460, 240, 500, 285, 16))&#10;platforms.push(new Platform(460, 285, 40, 195, 16, 0))'></textarea>
         <div id = 'importPlatformsButton' onclick = 'importPlatforms()'>Import Platforms</div>
         <img id = 'map' src = 'Map.jpeg'>

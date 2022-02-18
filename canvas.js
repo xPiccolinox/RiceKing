@@ -162,7 +162,7 @@ class Wind {
 
     draw() {
         c.beginPath()
-        c.fillStyle = 'rgba(255, 0, 0, 0.2)'
+        c.fillStyle = 'rgba(255, 255, 255, 0.15)'
         c.fillRect(this.x, this.y, this.width, this.height)
         c.closePath()
     }
@@ -177,7 +177,7 @@ class WindParticle {
     constructor () {
         this.x = Math.random() * canvas.width
         this.y = Math.random() * canvas.height
-        this.radius = Math.random() * 3 + 2
+        this.radius = Math.random() * 2 + 1
         this.randomVelocity = Math.random()
         this.color = 'rgba(255, 255, 255, 1)'
     }
@@ -203,15 +203,18 @@ class WindParticle {
 // Animate canvas
 function animate() {
     requestAnimationFrame(animate)
+    c.save()
+    c.globalAlpha = 0.8
     c.fillStyle = 'rgba(80, 80, 80, 1)'
     c.fillRect(0, 0, canvas.width, canvas.height)
+    c.restore()
 
     player.update()
 
     platforms.forEach(platform => {
         platform.update()
     })
-
+    
     slides.forEach(slide => {
         slide.update()
     })
@@ -237,7 +240,7 @@ function animate() {
 
 // Initiate everything
 const player = new Player(canvas.width / 2 - 20, canvas.height - 300, 40, 50, 'red')
-for (let i = 0; i < 100; i++) {
+for (let i = 0; i < 200; i++) {
     windParticles.push(new WindParticle())
 }
 initPlatforms()
