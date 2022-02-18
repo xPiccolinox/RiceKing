@@ -10,7 +10,6 @@ function initPlatforms() {
     platforms.push(new Platform(140, 495, 100, 75, -1, 0))
     platforms.push(new Platform(580, 495, 100, 75, -1, 0))
     // Level 0
-    winds.push(new Wind(0))
     platforms.push(new Platform(600, 345, 200, 255, 0, 0))
     platforms.push(new Platform(300, 120, 200, 75, 0, 0))
     platforms.push(new Platform(0, 345, 200, 255, 0, 0))
