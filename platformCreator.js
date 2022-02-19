@@ -315,7 +315,7 @@ function levelChange() {
             if (string.slice(0, 1) === 'p') {
                 string = string.slice(string.indexOf('m(') + 2, string.indexOf(')'))
                 let stringArr = string.split(', ')
-                div.innerHTML = `platforms.push(new Platform(${stringArr[0]}, ${stringArr[1]}, ${stringArr[2]}, ${stringArr[3]}, ${platformLevel}, ${platformSurface})) <div onclick = 'removePlatform(this)'>X</div>`
+                div.innerHTML = `platforms.push(new Platform(${stringArr[0]}, ${stringArr[1]}, ${stringArr[2]}, ${stringArr[3]}, ${platformLevel}, ${stringArr[5]})) <div onclick = 'removePlatform(this)'>X</div>`
             } else if (string.slice(0, 1) === 's') {
                 string = string.slice(string.indexOf('e(') + 2, string.indexOf(')'))
                 let stringArr = string.split(', ')
@@ -426,11 +426,11 @@ function mouseOutPlatform(id) {
     getId = id.slice(id.indexOf('_') + 1)
     rectangles.forEach(rectangle => {
         if (rectangle.id == getId) {
-            if (rectangle.surface === 0) {
+            if (rectangle.surface == 0) {
                 rectangle.color = 'rgba(255, 210, 97, 0.3)'
-            } else if (rectangle.surface === 1) {
+            } else if (rectangle.surface == 1) {
                 rectangle.color = 'rgba(120, 255, 237, 0.3)'
-            } else if (rectangle.surface === 2) {
+            } else if (rectangle.surface == 2) {
                 rectangle.color = 'rgba(0, 148, 227, 0.3)'
             }
         }
@@ -462,9 +462,9 @@ function windSwitch() {
 }
     // Copy all platforms to Clipboard
 function copyToClipboard() {
-    copyString = ''
+    copyString = `// Level ${platformLevel} \n`
     if (wind === true) {
-        copyString = `winds.push(new Wind(${platformLevel}))`
+        copyString = copyString + `winds.push(new Wind(${platformLevel}))`
     }
     platformVar.childNodes.forEach ((childNode, index) => {
         if (index === 0 && wind === false) copyString = copyString + childNode.innerText
@@ -494,7 +494,6 @@ function importPlatforms() {
             string = string.slice(string.indexOf('m(') + 2, string.indexOf(')'))
             let stringArr = string.split(', ')
             rectangles.push(new RectangleDraw(stringArr[0], stringArr[1], stringArr[2], stringArr[3], platform_id, stringArr[5]))
-            console.log(stringArr)
             div = document.createElement(`div`)
             div.id = `platform_${platform_id}`
             div.setAttribute('onMouseOver', 'mouseOverPlatform(id)')
@@ -517,6 +516,9 @@ function importPlatforms() {
             div.innerHTML = `slides.push(new Slide(${stringArr[0]}, ${stringArr[1]}, ${stringArr[2]}, ${stringArr[3]}, ${stringArr[4]})) <div onclick = 'removePlatform(this)'>X</div>`
             platformVar.appendChild(div)
             platform_id++
+        } else if (string.slice(0, 1) === 'w') {
+            wind = false
+            windSwitch()
         }
     })
     importPlatformsText.value = ''

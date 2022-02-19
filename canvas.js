@@ -244,6 +244,7 @@ for (let i = 0; i < 200; i++) {
     windParticles.push(new WindParticle())
 }
 initPlatforms()
+initPlatforms2()
 animate()
 
 // DEV MODE - Press '/' to enable

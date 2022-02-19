@@ -340,8 +340,8 @@ function playerMechanics() {
     // Player in wind
     winds.forEach(wind => {
         function playerInWind(wind) {
-            return player.y + player.height >= wind.y &&
-            player.y <= wind.y + wind.height
+            return player.y + player.height > wind.y + 1 &&
+            player.y < wind.y + wind.height - 1
         }
         if (playerInWind(wind)) {
             player.inWind = true
@@ -392,7 +392,7 @@ function playerMechanics() {
         player.jumpCharge = true
         // Auto-jump if velocityCharge > 18
             // Jump left
-        if (keys.space.pressed && keys.left.pressed && player.velocityCharge >= 18) {
+        if (keys.space.pressed && keys.left.pressed && player.velocityCharge >= 18 && player.onPlatform === true) {
             if (player.move === 2 && player.velocity.x > 2) {
                 player.velocity.x = -1
             } else {
@@ -403,8 +403,9 @@ function playerMechanics() {
             player.velocityCharge = 0
             keys.space.pressed = false
             player.jumpCharge = false
+        }
             // Jump right
-        } else if (keys.space.pressed && keys.right.pressed && player.velocityCharge >= 18) {
+        else if (keys.space.pressed && keys.right.pressed && player.velocityCharge >= 18 && player.onPlatform === true) {
             if (player.move === 2 && player.velocity.x < -2) {
                 player.velocity.x = 1
             } else {
@@ -415,17 +416,19 @@ function playerMechanics() {
             player.velocityCharge = 0
             keys.space.pressed = false
             player.jumpCharge = false
+        }
             // Jump straight up (neither left or right is being hold)
-        } else if (keys.space.pressed && !keys.left.pressed && !keys.right.pressed && player.velocityCharge >= 18) {
+        else if (keys.space.pressed && !keys.left.pressed && !keys.right.pressed && player.velocityCharge >= 18 && player.onPlatform === true) {
             player.velocity.y = -18
             player.color = 'red'
             player.velocityCharge = 0
             keys.space.pressed = false
             player.jumpCharge = false
         }
-        // Jump if 'SPACE' isn't being hold anymore
-            // Jump left
-    } else if (!keys.space.pressed && keys.left.pressed && player.velocityCharge > 0.5) {
+    }
+    // Jump if 'SPACE' isn't being hold anymore
+        // Jump left
+    else if (!keys.space.pressed && keys.left.pressed && player.velocityCharge > 0.5 && player.onPlatform === true) {
         if (player.move === 2 && player.velocity.x > 2) {
             player.velocity.x = -1
         } else {
@@ -435,8 +438,9 @@ function playerMechanics() {
         player.color = 'red'
         player.velocityCharge = 0
         player.jumpCharge = false
-            // Jump right
-    } else if (!keys.space.pressed && keys.right.pressed && player.velocityCharge > 0.5) {
+    }
+        // Jump right
+    else if (!keys.space.pressed && keys.right.pressed && player.velocityCharge > 0.5 && player.onPlatform === true) {
         if (player.move === 2 && player.velocity.x < -2) {
             player.velocity.x = 1
         } else {
@@ -446,8 +450,9 @@ function playerMechanics() {
         player.color = 'red'
         player.velocityCharge = 0
         player.jumpCharge = false
-            // Jump straight up (neither left or right is being hold)
-    } else if (!keys.space.pressed && !keys.left.pressed && !keys.right.pressed && player.velocityCharge > 0.5) {
+    }
+        // Jump straight up
+    else if (!keys.space.pressed && !keys.left.pressed && !keys.right.pressed && player.velocityCharge > 0.5 && player.onPlatform === true) {
         player.velocity.y = -player.velocityCharge
         player.velocity.x = player.velocity.x
         player.color = 'red'
@@ -459,7 +464,8 @@ function playerMechanics() {
     } else if (player.velocity.x == 0 && player.velocity.y != 0 && player.previousVelocity < -1 && player.jumpCharge === false) {
         player.velocity.x = 4
     }
-    if (player.inWind === true && player.y > 0 && player.y + player.height < canvas.height) {
+    // Wind particles visible if Player is in Wind area
+    if (player.inWind === true && player.y + player.height / 2 > 0 && player.y + player.height / 2 < 600) {
         windParticles.forEach(windParticle => {
             windParticle.color = 'rgba(255, 255, 255, 1)'
         })        
