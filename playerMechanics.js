@@ -269,7 +269,7 @@ function playerMechanics() {
             }
             else if (playerSlideBottomRightCollisionFromSlide(player, slide)) {
                 if (player.x + player.width > slide.x2 && player.x + player.width < slide.x1) {
-                    player.y = slide.y2 - player.height + Math.abs(slide.x2 - player.x - player.width) / (slide.x1 - slide.x2) * (slide.y1 - slide.y2) - 3
+                    player.y = slide.y2 - player.height + Math.abs(slide.x2 - player.x - player.width) / (slide.x1 - slide.x2) * (slide.y1 - slide.y2) - 5
                     if (player.velocity.x > 0) {
                         player.velocity.x = player.velocity.x * 0.8 - 0.2
                     } else if (player.velocity.x > -14) {
@@ -322,7 +322,7 @@ function playerMechanics() {
             }
             else if (playerSlideBottomLeftCollisionSlide(player, slide)) {
                 if (player.x > slide.x1 && player.x < slide.x2) {
-                    player.y = slide.y2 - player.height - Math.abs(slide.x2 - player.x) / (slide.x2 - slide.x1) * (slide.y2 - slide.y1) - 3
+                    player.y = slide.y2 - player.height - Math.abs(slide.x2 - player.x) / (slide.x2 - slide.x1) * (slide.y2 - slide.y1) - 5
                     if (player.velocity.x < 0) {
                         player.velocity.x = player.velocity.x * 0.8 + 0.2
                     } else if (player.velocity.x < 14) {
