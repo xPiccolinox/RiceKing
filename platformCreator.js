@@ -308,6 +308,9 @@ class WindParticle {
 function levelChange() {
     if (levelInput.value != '') {
         platformLevel = levelInput.value
+        if (platformLevel >= 42) image.scroll = 0
+        else if (platformLevel <= 0) image.scroll = 42
+        else image.scroll = 42 - platformLevel
         levelText.innerText = `Level: ${platformLevel}`
         levelInput.value = ''
         platformVar.childNodes.forEach(div => {

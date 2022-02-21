@@ -25,6 +25,7 @@ const windParticles = []
 let windForce = 0
 let windAcceleration = 0
 let gravity = 0.6
+let additionalHeight
 
 //  Player movement buttons
 addEventListener('keydown', ({ keyCode }) => {

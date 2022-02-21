@@ -54,16 +54,20 @@ function playerMechanics() {
             player.y = 1 + player.height / 2
             player.level -= 1
         }
-    // Player collision detection with every platform
+    // Player collision check with every platform (top and bottom)
     platforms.forEach(platform => {
         function playerPlatformCollisionFromTop(player, platform) {
+            // if (platform.height >= 30) additionalHeight = platform.height / 2
+            // else additionalHeight = 15
+            if (player.velocity.y === 0.6) additionalHeight = 15
+            else additionalHeight = 20
             return player.x + player.width > platform.x &&
             player.x < platform.x + platform.width &&
             player.velocity.y > 0 &&
             player.velocity.y != 5.5 &&
             player.velocity.y != 6.1 &&
             player.y + player.height + player.velocity.y >= platform.y &&
-            player.y + player.height + player.velocity.y <= platform.y + 20
+            player.y + player.height + player.velocity.y <= platform.y + additionalHeight
         }
         function playerPlatformCollisionFromBottom(player, platform) {
             return player.x + player.width > platform.x &&
@@ -71,22 +75,6 @@ function playerMechanics() {
                 player.velocity.y < 0 &&
                 player.y + player.velocity.y <= platform.y + platform.height + 2 &&
                 player.y + player.velocity.y >= platform.y + platform.height - 18
-        }
-        function playerPlatformCollisionFromLeft(player, platform) {
-            return player.y + player.height > platform.y + 1 &&
-            player.y < platform.y + platform.height - 1 &&
-            player.x + player.width + player.velocity.x >= platform.x &&
-            player.x + player.width + player.velocity.x <= platform.x + platform.width - 1 &&
-            player.velocity.y != 5.5 &&
-            player.velocity.y != 6.1
-        }
-        function playerPlatformCollisionFromRight(player, platform) {
-            return player.y + player.height >= platform.y + 1 &&
-            player.y <= platform.y + platform.height - 1 &&
-            player.x + player.velocity.x <= platform.x + platform.width &&
-            player.x + player.velocity.x >= platform.x + platform.width - platform.width + 1 &&
-            player.velocity.y != 5.5 &&
-            player.velocity.y != 6.1
         }
         if (playerPlatformCollisionFromTop(player, platform)) {
             if (platform.surface === 0) {
@@ -111,20 +99,39 @@ function playerMechanics() {
             player.velocity.y = 0.001
             player.velocity.x *= 0.3
         }
-        else if (playerPlatformCollisionFromLeft(player, platform)) {
-            player.x = platform.x - player.width - 1
-            if (player.velocity.y !== 0) player.velocity.x = -4
-            else if (player.velocity.y === 0) player.velocity.x = 0
-        }
-        else if (playerPlatformCollisionFromRight(player, platform)) {
-            player.x = platform.x + platform.width + 1
-            if (player.velocity.y !== 0) player.velocity.x = 4
-            else if (player.velocity.y === 0) player.velocity.x = 0
-        }
         else {
             if (platform.surface === 0) platform.color = 'rgba(255, 255, 255, 1)'
             else if (platform.surface === 1) platform.color = 'rgba(184, 255, 246, 1)'
             else if (platform.surface === 2) platform.color = 'rgba(86, 190, 245, 1)'
+        }
+    })
+    // Player collision check with every platform (left and right)
+    platforms.forEach(platform => {
+        function playerPlatformCollisionFromRight(player, platform) {
+            return player.y + player.height >= platform.y + 1 &&
+            player.y <= platform.y + platform.height - 1 &&
+            player.x + player.velocity.x <= platform.x + platform.width &&
+            player.x + player.velocity.x >= platform.x + platform.width - 15 &&
+            player.velocity.y != 5.5 &&
+            player.velocity.y != 6.1
+        }
+        function playerPlatformCollisionFromLeft(player, platform) {
+            return player.y + player.height > platform.y + 1 &&
+            player.y < platform.y + platform.height - 1 &&
+            player.x + player.width + player.velocity.x >= platform.x &&
+            player.x + player.width + player.velocity.x <= platform.x + 15 &&
+            player.velocity.y != 5.5 &&
+            player.velocity.y != 6.1
+        }
+        if (playerPlatformCollisionFromRight(player, platform)) {
+            player.x = platform.x + platform.width + 1
+            if (player.onPlatform === false) player.velocity.x = 4
+            else if (player.onPlatform === true) player.velocity.x = 0
+        }
+        else if (playerPlatformCollisionFromLeft(player, platform)) {
+            player.x = platform.x - player.width - 1
+            if (player.onPlatform === false) player.velocity.x = -4
+            else if (player.onPlatform === true) player.velocity.x = 0
         }
     })
     // Player collision with every slide
@@ -238,7 +245,7 @@ function playerMechanics() {
                 player.y + player.velocity.y >= slide.y2 - 20
             }
             function playerSlideBottomRightCollisionFromRight(player, slide) {
-                return player.y + player.height >= slide.y1 &&
+                return player.y + player.height >= slide.y1 + 1 &&
                 player.y <= slide.y2 &&
                 player.x + player.velocity.x <= slide.x1 &&
                 player.x >= slide.x1
@@ -254,7 +261,6 @@ function playerMechanics() {
                 player.y = slide.y2
                 player.velocity.y = 0.001
                 player.velocity.x *= 0.3
-                console.log('1')
             }
             else if (playerSlideBottomRightCollisionFromRight(player, slide)) {
                 player.x = slide.x1
@@ -271,7 +277,7 @@ function playerMechanics() {
                     }
                     player.velocity.y = 5.5
                     slide.color = 'rgba(189, 140, 255, 1)'
-                } else if (player.x + player.width >= slide.x1 && player.x < slide.x1 && player.velocity.y != 0) {
+                } else if (player.x + player.width >= slide.x1 && player.x < slide.x1 && player.velocity.y != 0 && player.y + player.height >= slide.y1 + 5) {
                     player.velocity.y = 0.1
                     player.y = slide.y1 - player.height
                     if (player.velocity.x > -7)
@@ -292,7 +298,7 @@ function playerMechanics() {
                 player.y + player.velocity.y >= slide.y2 - 20
             }
             function playerSlideBottomLeftCollisionFromLeft(player, slide) {
-                return player.y + player.height >= slide.y1 &&
+                return player.y + player.height >= slide.y1 + 1 &&
                 player.y <= slide.y2 &&
                 player.x + player.width + player.velocity.x >= slide.x1 &&
                 player.x + player.width <= slide.x1
@@ -324,12 +330,13 @@ function playerMechanics() {
                     }
                     player.velocity.y = 5.5
                     slide.color = 'rgba(189, 140, 255, 1)'
-                } else if (player.x + player.width > slide.x1 && player.x <= slide.x1 && player.velocity.y != 0) {
+                } else if (player.x + player.width > slide.x1 && player.x <= slide.x1 && player.velocity.y != 0 && player.y + player.height >= slide.y1 + 5) {
                     player.velocity.y = 0.1
                     player.y = slide.y1 - player.height
-                    if (player.velocity.x < 7)
+                    if (player.velocity.x < 7) {
                     player.velocity.x += 3
                     player.velocity.y = 5.5
+                    }
                 }
             }
             else {
@@ -461,7 +468,8 @@ function playerMechanics() {
     // Player bounce of the wall if in mid-air and collided
     if (player.velocity.x == 0 && player.velocity.y != 0 && player.previousVelocity > 1 && player.jumpCharge === false) {
         player.velocity.x = -4
-    } else if (player.velocity.x == 0 && player.velocity.y != 0 && player.previousVelocity < -1 && player.jumpCharge === false) {
+    }
+    else if (player.velocity.x == 0 && player.velocity.y != 0 && player.previousVelocity < -1 && player.jumpCharge === false) {
         player.velocity.x = 4
     }
     // Wind particles visible if Player is in Wind area
