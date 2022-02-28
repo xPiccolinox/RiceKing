@@ -90,6 +90,10 @@ function playerMechanics() {
                 player.move = 2
                 platform.color = 'rgba(0, 148, 227, 1)'
             }
+            if (player.velocity.y >= 19) {
+                player.color = 'rgb(247, 119, 7)'
+                player.dizzy = true
+            }
             player.velocity.y = 0
             player.y = platform.y - player.height + 0.1
             player.onPlatform = true
@@ -275,6 +279,10 @@ function playerMechanics() {
                     } else if (player.velocity.x > -14) {
                         player.velocity.x -= 0.3
                     }
+                    if (player.velocity.y >= 19) {
+                        player.color = 'rgb(247, 119, 7)'
+                        player.dizzy = true
+                    }
                     player.velocity.y = 5.5
                     slide.color = 'rgba(189, 140, 255, 1)'
                 } else if (player.x + player.width >= slide.x1 && player.x < slide.x1 && player.velocity.y != 0 && player.y + player.height >= slide.y1 + 5) {
@@ -328,6 +336,10 @@ function playerMechanics() {
                     } else if (player.velocity.x < 14) {
                         player.velocity.x += 0.3
                     }
+                    if (player.velocity.y >= 19) {
+                        player.color = 'rgb(247, 119, 7)'
+                        player.dizzy = true
+                    }
                     player.velocity.y = 5.5
                     slide.color = 'rgba(189, 140, 255, 1)'
                 } else if (player.x + player.width > slide.x1 && player.x <= slide.x1 && player.velocity.y != 0 && player.y + player.height >= slide.y1 + 5) {
@@ -366,104 +378,116 @@ function playerMechanics() {
             }
         }
     })
-    // Player movement left & right
-    function playerMoveLeft(keys, player) {
-        return keys.left.pressed &&
-        !keys.space.pressed &&
-        player.velocity.y === 0 &&
-        player.move !== 1
-    }
-    function playerMoveRight(keys, player) {
-        return keys.right.pressed &&
-        !keys.space.pressed &&
-        player.velocity.y === 0 &&
-        player.move !== 1
-    }
-    if (playerMoveLeft(keys, player)) {
-        if (player.move === 0) {
-            player.velocity.x = -4
-        } else if (player.move === 2) {
-            player.velocity.x += -0.15
+    // Player movement if not dizzy
+    if (player.dizzy === false) {
+        // Player movement left & right
+        function playerMoveLeft(keys, player) {
+            return keys.left.pressed &&
+            !keys.space.pressed &&
+            player.velocity.y === 0 &&
+            player.move !== 1
         }
-    } else if (playerMoveRight(keys, player)) {
-        if (player.move === 0) {
-            player.velocity.x = 4
-        } else if (player.move === 2) {
-            player.velocity.x += 0.15
+        function playerMoveRight(keys, player) {
+            return keys.right.pressed &&
+            !keys.space.pressed &&
+            player.velocity.y === 0 &&
+            player.move !== 1
         }
-    }
-        // Jump charge (stop moving)
-    if (keys.space.pressed && player.velocity.y == 0) {
-        player.color = 'green'
-        player.velocityCharge += 0.3
-        player.jumpCharge = true
-        // Auto-jump if velocityCharge > 18
+        if (playerMoveLeft(keys, player)) {
+            if (player.move === 0) {
+                player.velocity.x = -4
+            } else if (player.move === 2) {
+                player.velocity.x += -0.15
+            }
+        } else if (playerMoveRight(keys, player)) {
+            if (player.move === 0) {
+                player.velocity.x = 4
+            } else if (player.move === 2) {
+                player.velocity.x += 0.15
+            }
+        }
+            // Jump charge (stop moving)
+        if (keys.space.pressed && player.velocity.y == 0) {
+            player.color = 'green'
+            player.velocityCharge += 0.3
+            player.jumpCharge = true
+            // Auto-jump if velocityCharge > 18
+                // Jump left
+            if (keys.space.pressed && keys.left.pressed && player.velocityCharge >= 18 && player.onPlatform === true) {
+                if (player.move === 2 && player.velocity.x > 2) {
+                    player.velocity.x = -1
+                } else {
+                    player.velocity.x = -7
+                }
+                player.velocity.y = -18
+                player.color = 'red'
+                player.velocityCharge = 0
+                keys.space.pressed = false
+                player.jumpCharge = false
+            }
+                // Jump right
+            else if (keys.space.pressed && keys.right.pressed && player.velocityCharge >= 18 && player.onPlatform === true) {
+                if (player.move === 2 && player.velocity.x < -2) {
+                    player.velocity.x = 1
+                } else {
+                    player.velocity.x = 7
+                }
+                player.velocity.y = -18
+                player.color = 'red'
+                player.velocityCharge = 0
+                keys.space.pressed = false
+                player.jumpCharge = false
+            }
+                // Jump straight up (neither left or right is being hold)
+            else if (keys.space.pressed && !keys.left.pressed && !keys.right.pressed && player.velocityCharge >= 18 && player.onPlatform === true) {
+                player.velocity.y = -18
+                player.color = 'red'
+                player.velocityCharge = 0
+                keys.space.pressed = false
+                player.jumpCharge = false
+            }
+        }
+        // Jump if 'SPACE' isn't being hold anymore
             // Jump left
-        if (keys.space.pressed && keys.left.pressed && player.velocityCharge >= 18 && player.onPlatform === true) {
+        else if (!keys.space.pressed && keys.left.pressed && player.velocityCharge > 0.5 && player.onPlatform === true) {
             if (player.move === 2 && player.velocity.x > 2) {
                 player.velocity.x = -1
             } else {
                 player.velocity.x = -7
             }
-            player.velocity.y = -18
+            player.velocity.y = -player.velocityCharge
             player.color = 'red'
             player.velocityCharge = 0
-            keys.space.pressed = false
             player.jumpCharge = false
         }
             // Jump right
-        else if (keys.space.pressed && keys.right.pressed && player.velocityCharge >= 18 && player.onPlatform === true) {
+        else if (!keys.space.pressed && keys.right.pressed && player.velocityCharge > 0.5 && player.onPlatform === true) {
             if (player.move === 2 && player.velocity.x < -2) {
                 player.velocity.x = 1
             } else {
                 player.velocity.x = 7
             }
-            player.velocity.y = -18
+            player.velocity.y = -player.velocityCharge
             player.color = 'red'
             player.velocityCharge = 0
-            keys.space.pressed = false
             player.jumpCharge = false
         }
-            // Jump straight up (neither left or right is being hold)
-        else if (keys.space.pressed && !keys.left.pressed && !keys.right.pressed && player.velocityCharge >= 18 && player.onPlatform === true) {
-            player.velocity.y = -18
+            // Jump straight up
+        else if (!keys.space.pressed && !keys.left.pressed && !keys.right.pressed && player.velocityCharge > 0.5 && player.onPlatform === true) {
+            player.velocity.y = -player.velocityCharge
+            player.velocity.x = player.velocity.x
             player.color = 'red'
             player.velocityCharge = 0
-            keys.space.pressed = false
-            player.jumpCharge = false
         }
     }
-    // Jump if 'SPACE' isn't being hold anymore
-        // Jump left
-    else if (!keys.space.pressed && keys.left.pressed && player.velocityCharge > 0.5 && player.onPlatform === true) {
-        if (player.move === 2 && player.velocity.x > 2) {
-            player.velocity.x = -1
-        } else {
-            player.velocity.x = -7
+    // Player dizzy for 2 seconds (can't do anything)
+    else if (player.dizzy === true && player.velocity.x === 0) {
+        function playerNotDizzy() {
+            player.dizzy = false
+            player.color = 'rgb(255, 0, 0)'
         }
-        player.velocity.y = -player.velocityCharge
-        player.color = 'red'
-        player.velocityCharge = 0
-        player.jumpCharge = false
-    }
-        // Jump right
-    else if (!keys.space.pressed && keys.right.pressed && player.velocityCharge > 0.5 && player.onPlatform === true) {
-        if (player.move === 2 && player.velocity.x < -2) {
-            player.velocity.x = 1
-        } else {
-            player.velocity.x = 7
-        }
-        player.velocity.y = -player.velocityCharge
-        player.color = 'red'
-        player.velocityCharge = 0
-        player.jumpCharge = false
-    }
-        // Jump straight up
-    else if (!keys.space.pressed && !keys.left.pressed && !keys.right.pressed && player.velocityCharge > 0.5 && player.onPlatform === true) {
-        player.velocity.y = -player.velocityCharge
-        player.velocity.x = player.velocity.x
-        player.color = 'red'
-        player.velocityCharge = 0
+        setTimeout(playerNotDizzy, 2000)
+        console.log(':^)')
     }
     // Player bounce of the wall if in mid-air and collided
     if (player.velocity.x == 0 && player.velocity.y != 0 && player.previousVelocity > 1 && player.jumpCharge === false) {

@@ -74,6 +74,7 @@ class Player {
         this.onPlatform = false
         this.sliding = false
         this.inWind = false
+        this.dizzy = false
         this.move = 0
         this.level = 0
     }
@@ -240,7 +241,7 @@ function animate() {
 }
 
 // Initiate everything
-const player = new Player(canvas.width / 2 - 20, canvas.height - 300, 40, 50, 'red')
+const player = new Player(canvas.width / 2 - 20, canvas.height - 300, 40, 50, 'rgb(255, 0, 0)')
 for (let i = 0; i < 200; i++) {
     windParticles.push(new WindParticle())
 }
