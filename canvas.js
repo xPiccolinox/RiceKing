@@ -1,5 +1,7 @@
 const body = document.querySelector('body')
 const text = document.getElementById('text')
+const mapPlatformsElement = document.getElementById('mapPlatforms')
+const mapBackgroundElement = document.getElementById('mapBackground')
 const canvas = document.querySelector('canvas')
 const c = canvas.getContext('2d')
 canvas.width = 800
@@ -95,7 +97,6 @@ class Player {
         this.draw()
     }
 }
-
 // Platform class
 class Platform {
     constructor (x, y, width, height, level, surface) {
@@ -124,7 +125,6 @@ class Platform {
         this.draw()
     }
 }
-
 // Slide
 class Slide {
     constructor (x1, y1, x2, y2, level) {
@@ -151,7 +151,6 @@ class Slide {
         this.draw()
     }
 }
-
 // Wind
 class Wind {
     constructor (level) {
@@ -173,7 +172,6 @@ class Wind {
         this.draw()
     }
 }
-
 // Wind Particle
 class WindParticle {
     constructor () {
@@ -201,7 +199,28 @@ class WindParticle {
         this.x += windForce * 2 + (this.randomVelocity / 2 * windForce)
     }
 }
+// Map platforms
+class Image {
+    constructor (src) {
+        this.src = src
+        this.x = 0
+        this.y = 0
+        this.scroll = 42
+        this.opacity = 1
 
+    }
+
+    draw() {
+        c.save()
+        c.globalAlpha = this.opacity
+        c.drawImage(this.src, this.x, this.y - 600 * this.scroll, 800, 600 * 43)
+        c.restore()
+    }
+
+    update() {
+        this.draw()
+    }
+}
 // Animate canvas
 function animate() {
     requestAnimationFrame(animate)
@@ -211,24 +230,21 @@ function animate() {
     c.fillRect(0, 0, canvas.width, canvas.height)
     c.restore()
 
+    mapBackground.update()
     player.update()
-
     platforms.forEach(platform => {
         platform.update()
     })
-    
     slides.forEach(slide => {
         slide.update()
     })
-
     winds.forEach(wind => {
         wind.update()
     })
-
+    mapPlatforms.update()
     windParticles.forEach(particle => {
         particle.update()
     })
-
     if (player.level === 0) {
         text.innerText = 'A - Left, D - Right, Space - Jump'
     }
@@ -241,7 +257,9 @@ function animate() {
 }
 
 // Initiate everything
+const mapBackground = new Image(mapBackgroundElement)
 const player = new Player(canvas.width / 2 - 20, canvas.height - 300, 40, 50, 'rgb(255, 0, 0)')
+const mapPlatforms = new Image(mapPlatformsElement)
 for (let i = 0; i < 200; i++) {
     windParticles.push(new WindParticle())
 }
@@ -277,6 +295,8 @@ function devModeLevelUp() {
         player.velocity.x = 0
         player.velocity.y = 0
         player.level -= 1
+        mapPlatforms.scroll += 1
+        mapBackground.scroll += 1
         gravity = 0
         clearTimeout(gravityTimeout)
         gravityTimeout = setTimeout(gravityRestore, 2000)
@@ -300,6 +320,8 @@ function devModeLevelDown() {
         player.velocity.x = 0
         player.velocity.y = 0
         player.level += 1
+        mapPlatforms.scroll -= 1
+        mapBackground.scroll -= 1
         gravity = 0
         clearTimeout(gravityTimeout)
         gravityTimeout = setTimeout(gravityRestore, 2000)

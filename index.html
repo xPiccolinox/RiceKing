@@ -26,11 +26,19 @@
                 left: 50%;
                 transform: translate(-50%, -50%);
             }
+            #mapPlatforms {
+                display: none;
+            }
+            #mapBackground {
+                display: none;
+            }
         </style>
     </head>
     <body>
-        <canvas></canvas>
         <div id = 'text'>A - Left, D - Right, Space - Jump</div>
+        <img id = 'mapPlatforms' src = 'RiceKingPlatforms.png'>
+        <img id = 'mapBackground' src = 'RiceKingBackground.png'>
+        <canvas></canvas>
         <script src = 'playerMechanics.js'></script>
         <script src = 'levels.js'></script>
         <script src = 'levels2.js'></script>

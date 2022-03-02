@@ -37,6 +37,8 @@ function playerMechanics() {
             winds.forEach(wind => {
                 wind.y += 600
             })
+            mapPlatforms.scroll -= 1
+            mapBackground.scroll -= 1
             player.y = 599 - player.height / 2
             player.level += 1
         // Level down
@@ -51,6 +53,8 @@ function playerMechanics() {
             winds.forEach(wind => {
                 wind.y -= 600
             })
+            mapPlatforms.scroll += 1
+            mapBackground.scroll += 1
             player.y = 1 + player.height / 2
             player.level -= 1
         }
@@ -486,8 +490,7 @@ function playerMechanics() {
             player.dizzy = false
             player.color = 'rgb(255, 0, 0)'
         }
-        setTimeout(playerNotDizzy, 2000)
-        console.log(':^)')
+        setTimeout(playerNotDizzy, 1000)
     }
     // Player bounce of the wall if in mid-air and collided
     if (player.velocity.x == 0 && player.velocity.y != 0 && player.previousVelocity > 1 && player.jumpCharge === false) {
