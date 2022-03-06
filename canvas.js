@@ -2,6 +2,8 @@ const body = document.querySelector('body')
 const text = document.getElementById('text')
 const mapPlatformsElement = document.getElementById('mapPlatforms')
 const mapBackgroundElement = document.getElementById('mapBackground')
+const loadingScreen = document.getElementById('loadingScreen')
+const loadingBarProgress = document.getElementById('loadingBarProgress')
 const canvas = document.querySelector('canvas')
 const c = canvas.getContext('2d')
 canvas.width = 800
@@ -28,6 +30,8 @@ let windForce = 0
 let windAcceleration = 0
 let gravity = 0.6
 let additionalHeight
+let backgroundLoaded = false
+let platformsLoaded = false
 
 //  Player movement buttons
 addEventListener('keydown', ({ keyCode }) => {
@@ -265,7 +269,35 @@ for (let i = 0; i < 200; i++) {
 }
 initPlatforms()
 initPlatforms2()
-animate()
+
+function loadingOpacity() {
+    loadingScreen.style.animationPlayState = 'running'
+    animate()
+}
+function loadingBarFull() {
+    loadingBarProgress.style.width = '0px'
+    setTimeout(loadingOpacity, 100)
+}
+mapBackgroundElement.onload = function() {
+    backgroundLoaded = true
+    if (platformsLoaded === true) {
+        loadingBarProgress.style.width = '60px'
+        setTimeout(loadingBarFull, 1100)
+    }
+    else {
+        loadingBarProgress.style.width = '140px'
+    }
+}
+mapPlatformsElement.onload = function() {
+    platformsLoaded = true
+    if (backgroundLoaded === true) {
+        loadingBarProgress.style.width = '60px'
+        setTimeout(loadingBarFull, 1100)
+    }
+    else {
+        loadingBarProgress.style.width = '140px'
+    }
+}
 
 // DEV MODE - Press '/' to enable
 // "<" - Level Down

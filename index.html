@@ -25,20 +25,87 @@
                 top: calc(50% + 350px);
                 left: 50%;
                 transform: translate(-50%, -50%);
+                user-select: none;
             }
-            #mapPlatforms {
-                display: none;
+            #loadingScreen {
+                background-color: rgba(0, 0, 0, 1);
+                display: block;
+                width: 800px;
+                height: 600px;
+                top: 50%;
+                left: 50%;
+                position: absolute;
+                transform: translate(-50%, -50%);
+                border: 2px solid rgb(255, 255, 255);
+                user-select: none;
+                filter: opacity(0);
+                animation: fade 2s paused
+            }
+            @keyframes fade {
+                from {filter: opacity(1)};
+                to {filter: opacity(0)};
+            }
+            #loadingScreenContent {
+                background-color: rgba(0, 0, 0, 1);
+                color: rgba(255, 255, 255, 1);
+                display: block;
+                width: 400px;
+                height: 80px;
+                top: 50%;
+                left: 50%;
+                position: relative;
+                transform: translate(-50%, -50%);
+                text-align: center;
+                font-size: 42px;
+                user-select: none;
+            }
+            #loadingBar {
+                background-color: rgba(255, 255, 255, 1);
+                display: block;
+                width: 200px;
+                height: 20px;
+                bottom: 0px;
+                left: 50%;
+                position: absolute;
+                transform: translateX(-50%);
+                user-select: none;
+            }
+            #loadingBarProgress {
+                background-color: rgba(0, 0, 0, 1);
+                display: block;
+                width: 196px;
+                height: 16px;
+                top: 2px;
+                right: 2px;
+                position: absolute;
+                user-select: none;
             }
             #mapBackground {
-                display: none;
+                /* display: none; */
+                height: 1000px;
+                position: absolute;
+            }
+            #mapPlatforms {
+                /* display: none; */
+                height: 1000px;
+                position: absolute;
             }
         </style>
     </head>
     <body>
         <div id = 'text'>A - Left, D - Right, Space - Jump</div>
-        <img id = 'mapPlatforms' src = 'RiceKingPlatforms.png'>
         <img id = 'mapBackground' src = 'RiceKingBackground.png'>
+        <img id = 'mapPlatforms' src = 'RiceKingPlatforms.png'>
         <canvas></canvas>
+        <div id = 'loadingScreen'>
+            <div id = 'loadingScreenContent'>
+                GAME LOADING
+                <div id = 'loadingBar'>
+                    <div id = 'loadingBarProgress'>
+                    </div>
+                </div>
+            </div>
+        </div>
         <script src = 'playerMechanics.js'></script>
         <script src = 'levels.js'></script>
         <script src = 'levels2.js'></script>
