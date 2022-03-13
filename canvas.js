@@ -167,7 +167,7 @@ class Wind {
 
     draw() {
         c.beginPath()
-        c.fillStyle = 'rgba(255, 255, 255, 0.15)'
+        c.fillStyle = 'rgba(255, 255, 255, 0)'
         c.fillRect(this.x, this.y, this.width, this.height)
         c.closePath()
     }

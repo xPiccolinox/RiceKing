@@ -55,7 +55,7 @@ function playerMechanics() {
             })
             mapPlatforms.scroll += 1
             mapBackground.scroll += 1
-            player.y = 1 + player.height / 2
+            player.y = 1 - player.height / 2
             player.level -= 1
         }
     // Player collision check with every platform (top and bottom)
@@ -363,8 +363,8 @@ function playerMechanics() {
     // Player in wind
     winds.forEach(wind => {
         function playerInWind(wind) {
-            return player.y + player.height > wind.y + 1 &&
-            player.y < wind.y + wind.height - 1
+            return player.y + player.height / 2 > wind.y + 1 &&
+            player.y + player.height / 2 < wind.y + wind.height - 1
         }
         if (playerInWind(wind)) {
             player.inWind = true
@@ -485,7 +485,7 @@ function playerMechanics() {
         }
     }
     // Player dizzy for 2 seconds (can't do anything)
-    else if (player.dizzy === true && player.velocity.x === 0) {
+    else if (player.dizzy === true && player.onPlatform === true) {
         function playerNotDizzy() {
             player.dizzy = false
             player.color = 'rgb(255, 0, 0)'
