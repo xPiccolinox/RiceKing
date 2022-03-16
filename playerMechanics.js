@@ -400,13 +400,16 @@ function playerMechanics() {
         if (playerMoveLeft(keys, player)) {
             if (player.move === 0) {
                 player.velocity.x = -4
-            } else if (player.move === 2) {
+            }
+            else if (player.move === 2) {
                 player.velocity.x += -0.15
             }
-        } else if (playerMoveRight(keys, player)) {
+        }
+        else if (playerMoveRight(keys, player)) {
             if (player.move === 0) {
                 player.velocity.x = 4
-            } else if (player.move === 2) {
+            }
+            else if (player.move === 2) {
                 player.velocity.x += 0.15
             }
         }
@@ -482,6 +485,7 @@ function playerMechanics() {
             player.velocity.x = player.velocity.x
             player.color = 'red'
             player.velocityCharge = 0
+            player.jumpCharge = false
         }
     }
     // Player dizzy for 2 seconds (can't do anything)
@@ -510,6 +514,4 @@ function playerMechanics() {
         windParticle.color = 'rgba(255, 255, 255, 0)'
         })
     }
-    player.onPlatform = false
-    player.inWind = false
 }

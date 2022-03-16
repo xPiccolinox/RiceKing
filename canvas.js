@@ -2,6 +2,7 @@ const body = document.querySelector('body')
 const text = document.getElementById('text')
 const mapPlatformsElement = document.getElementById('mapPlatforms')
 const mapBackgroundElement = document.getElementById('mapBackground')
+const playerTexture = document.getElementById('playerTexture')
 const loadingScreen = document.getElementById('loadingScreen')
 const loadingBarProgress = document.getElementById('loadingBarProgress')
 const canvas = document.querySelector('canvas')
@@ -32,6 +33,7 @@ let gravity = 0.6
 let additionalHeight
 let backgroundLoaded = false
 let platformsLoaded = false
+let animationFrame = 0
 
 //  Player movement buttons
 addEventListener('keydown', ({ keyCode }) => {
@@ -83,12 +85,15 @@ class Player {
         this.dizzy = false
         this.move = 0
         this.level = 0
+        this.animation = 0
+        this.facingLeft = true
     }
 
     draw() {
         c.beginPath()
-        c.fillStyle = this.color
-        c.fillRect(this.x, this.y, this.width, this.height)
+        // c.fillStyle = this.color
+        // c.fillRect(this.x, this.y, this.width, this.height)
+        c.drawImage(playerTexture, 60 * this.animation, 0, 60, 70, this.x - 10, this.y - 10, 60, 70)
         c.closePath()
     }
 
@@ -97,7 +102,10 @@ class Player {
         this.y += this.velocity.y
         this.velocity.y += gravity
         playerMechanics()
+        playerAnimations()
         player.previousVelocity = player.velocity.x
+        player.onPlatform = false
+        player.inWind = false
         this.draw()
     }
 }
