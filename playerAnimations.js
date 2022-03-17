@@ -3,8 +3,13 @@ function playerAnimations() {
     if (player.previousVelocity > 0) player.facingLeft = false
     else if (player.previousVelocity < 0) player.facingLeft = true
 
+    // Sliding
+    if (player.sliding === true) {
+        if (player.facingLeft === true) player.animation = 17
+        else if (player.facingLeft === false) player.animation = 18
+    }
     // In air
-    if (player.onPlatform === false) {
+    else if (player.onPlatform === false) {
         // Up
         if (player.velocity.y < 0) {
             // Left

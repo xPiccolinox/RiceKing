@@ -93,7 +93,7 @@ class Player {
         c.beginPath()
         // c.fillStyle = this.color
         // c.fillRect(this.x, this.y, this.width, this.height)
-        c.drawImage(playerTexture, 60 * this.animation, 0, 60, 70, this.x - 10, this.y - 10, 60, 70)
+        c.drawImage(playerTexture, 66 * this.animation, 0, 66, 70, this.x - 10, this.y - 10, 66, 70)
         c.closePath()
     }
 
@@ -106,6 +106,7 @@ class Player {
         player.previousVelocity = player.velocity.x
         player.onPlatform = false
         player.inWind = false
+        player.sliding = false
         this.draw()
     }
 }

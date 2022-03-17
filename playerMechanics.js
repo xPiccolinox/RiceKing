@@ -276,6 +276,7 @@ function playerMechanics() {
                 else if (player.velocity.y === 0) player.velocity.x = 0
             }
             else if (playerSlideBottomRightCollisionFromSlide(player, slide)) {
+                // On slide
                 if (player.x + player.width > slide.x2 && player.x + player.width < slide.x1) {
                     player.y = slide.y2 - player.height + Math.abs(slide.x2 - player.x - player.width) / (slide.x1 - slide.x2) * (slide.y1 - slide.y2) - 5
                     if (player.velocity.x > 0) {
@@ -289,7 +290,10 @@ function playerMechanics() {
                     }
                     player.velocity.y = 5.5
                     slide.color = 'rgba(189, 140, 255, 1)'
-                } else if (player.x + player.width >= slide.x1 && player.x < slide.x1 && player.velocity.y != 0 && player.y + player.height >= slide.y1 + 5) {
+                    player.sliding = true
+                }
+                // Behind slide
+                else if (player.x + player.width >= slide.x1 && player.x < slide.x1 && player.velocity.y != 0 && player.y + player.height >= slide.y1 + 5) {
                     player.velocity.y = 0.1
                     player.y = slide.y1 - player.height
                     if (player.velocity.x > -7)
@@ -333,6 +337,7 @@ function playerMechanics() {
                 else if (player.velocity.y === 0) player.velocity.x = 0
             }
             else if (playerSlideBottomLeftCollisionSlide(player, slide)) {
+                // On slide
                 if (player.x > slide.x1 && player.x < slide.x2) {
                     player.y = slide.y2 - player.height - Math.abs(slide.x2 - player.x) / (slide.x2 - slide.x1) * (slide.y2 - slide.y1) - 5
                     if (player.velocity.x < 0) {
@@ -346,7 +351,10 @@ function playerMechanics() {
                     }
                     player.velocity.y = 5.5
                     slide.color = 'rgba(189, 140, 255, 1)'
-                } else if (player.x + player.width > slide.x1 && player.x <= slide.x1 && player.velocity.y != 0 && player.y + player.height >= slide.y1 + 5) {
+                    player.sliding = true
+                }
+                // Behind slide
+                else if (player.x + player.width > slide.x1 && player.x <= slide.x1 && player.velocity.y != 0 && player.y + player.height >= slide.y1 + 5) {
                     player.velocity.y = 0.1
                     player.y = slide.y1 - player.height
                     if (player.velocity.x < 7) {
