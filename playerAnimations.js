@@ -35,25 +35,25 @@ function playerAnimations() {
         if (player.facingLeft === true) player.animation = 15
         else if (player.facingLeft === false) player.animation = 16
     }
-    // Move & idle (on platform & not dizzy)
+    // Move & idle
     else if (player.onPlatform === true && player.dizzy === false) {
         // Move left
-        if ((keys.left.pressed === true && keys.right.pressed === false) || 
-        (keys.left.pressed === true && keys.right.pressed === true)) {
+        if ((keys.left.pressed === true && keys.right.pressed === false && player.move != 1) || 
+        (keys.left.pressed === true && keys.right.pressed === true && player.move != 1)) {
             if (animationFrame <= 15) player.animation = 0
             else if (animationFrame <= 30) player.animation = 2
             else if (animationFrame <= 45) player.animation = 0
             else if (animationFrame <= 60) player.animation = 3
         }
         // Move right
-        else if (keys.left.pressed === false && keys.right.pressed === true) {
+        else if (keys.left.pressed === false && keys.right.pressed === true && player.move != 1) {
             if (animationFrame <= 15) player.animation = 4
             else if (animationFrame <= 30) player.animation = 6
             else if (animationFrame <= 45) player.animation = 4
             else if (animationFrame <= 60) player.animation = 7
         }
         // Idle
-        else if (keys.left.pressed === false && keys.right.pressed === false) {
+        else {
             // If previously moved left
             if (player.facingLeft === true) {
                 if (animationFrame <= 30) player.animation = 0

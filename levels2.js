@@ -1,6 +1,6 @@
 function initPlatforms2() {
 // Level 26
-// winds.push(new Wind(26))
+winds.push(new Wind(26))
 platforms.push(new Platform(240, 510, 80, 90, 26, 1))
 platforms.push(new Platform(380, 525, 260, 75, 26, 1))
 platforms.push(new Platform(280, 270, 100, 120, 26, 1))
@@ -11,7 +11,7 @@ platforms.push(new Platform(740, 0, 60, 120, 26, 0))
 platforms.push(new Platform(0, 0, 20, 600, 26, 0))
 platforms.push(new Platform(780, 120, 20, 480, 26, 0))
 // Level 27
-// winds.push(new Wind(27))
+winds.push(new Wind(27))
 platforms.push(new Platform(360, 270, 100, 90, 27, 0))
 platforms.push(new Platform(460, 300, 140, 60, 27, 0))
 platforms.push(new Platform(440, 465, 200, 135, 27, 1))

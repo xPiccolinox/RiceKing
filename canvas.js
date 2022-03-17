@@ -34,6 +34,7 @@ let additionalHeight
 let backgroundLoaded = false
 let platformsLoaded = false
 let animationFrame = 0
+let cookie = document.cookie
 
 //  Player movement buttons
 addEventListener('keydown', ({ keyCode }) => {
