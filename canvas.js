@@ -91,9 +91,10 @@ class Player {
 
     draw() {
         c.beginPath()
-        // c.fillStyle = this.color
-        // c.fillRect(this.x, this.y, this.width, this.height)
-        c.drawImage(playerTexture, 66 * this.animation, 0, 66, 70, this.x - 10, this.y - 10, 66, 70)
+        if (devMode === true) c.fillStyle = this.color
+        else c.fillStyle = 'rgba(0, 0, 0, 0)'
+        c.fillRect(this.x, this.y, this.width, this.height)
+        c.drawImage(playerTexture, 66 * this.animation, 0, 66, 70, this.x - 13, this.y - 10, 66, 70)
         c.closePath()
     }
 
@@ -279,34 +280,24 @@ for (let i = 0; i < 200; i++) {
 initPlatforms()
 initPlatforms2()
 
+// Loading
+let loadingProgress = 3
 function loadingOpacity() {
     loadingScreen.style.animationPlayState = 'running'
     animate()
 }
 function loadingBarFull() {
-    loadingBarProgress.style.width = '0px'
-    setTimeout(loadingOpacity, 100)
+        loadingBarProgress.style.width = '0px'
+        setTimeout(loadingOpacity, 200)
+    }
+function loadingBarProgressForward() {
+    loadingProgress -= 1
+    loadingBarProgress.style.width = `calc(196px * ${(loadingProgress + 1) / 4})`
+    if (loadingProgress == 0) setTimeout(loadingBarFull, 1000)
 }
-mapBackgroundElement.onload = function() {
-    backgroundLoaded = true
-    if (platformsLoaded === true) {
-        loadingBarProgress.style.width = '60px'
-        setTimeout(loadingBarFull, 1100)
-    }
-    else {
-        loadingBarProgress.style.width = '140px'
-    }
-}
-mapPlatformsElement.onload = function() {
-    platformsLoaded = true
-    if (backgroundLoaded === true) {
-        loadingBarProgress.style.width = '60px'
-        setTimeout(loadingBarFull, 1100)
-    }
-    else {
-        loadingBarProgress.style.width = '140px'
-    }
-}
+mapBackgroundElement.onload = function() {loadingBarProgressForward()}
+mapPlatformsElement.onload = function() {loadingBarProgressForward()}
+playerTexture.onload = function() {loadingBarProgressForward()}
 
 // DEV MODE - Press '/' to enable
 // "<" - Level Down
