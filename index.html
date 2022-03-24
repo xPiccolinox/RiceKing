@@ -37,14 +37,13 @@
                 left: 50%;
                 position: absolute;
                 transform: translate(-50%, -50%);
-                border: 2px solid rgb(255, 255, 255);
                 user-select: none;
                 filter: opacity(0);
-                animation: fade 2s paused
+                animation: fade 2s paused;
             }
             @keyframes fade {
-                from {filter: opacity(1)};
-                to {filter: opacity(0)};
+                from {filter: opacity(1)}
+                to {filter: opacity(0)}
             }
             #loadingScreenContent {
                 background-color: rgba(0, 0, 0, 1);
@@ -81,6 +80,110 @@
                 position: absolute;
                 user-select: none;
             }
+            #menuBg {
+                background-color: rgba(0, 0, 0, 1);
+                display: block;
+                width: 800px;
+                height: 600px;
+                top: 50%;
+                left: 50%;
+                position: absolute;
+                transform: translate(-50%, -50%);
+                user-select: none;
+                animation: restart 4s paused infinite;
+            }
+            @keyframes restart {
+                0% {background-color: rgba(0, 0, 0, 0)}
+                40% {background-color: rgba(0, 0, 0, 1)}
+                60% {background-color: rgba(0, 0, 0, 1)}
+                100% {background-color: rgba(0, 0, 0, 0)}
+            }
+            #menuBorder {
+                background-color: rgba(255, 255, 255, 1);
+                display: none;
+                width: 450px;
+                height: 230px;
+                top: 20px;
+                left: 20px;
+                position: absolute;
+                user-select: none;
+                border: 5px solid rgba(0, 0, 0, 1);
+                border-radius: 25px;
+            }
+            #menu {
+                background-color: rgba(0, 0 , 0, 1);
+                display: block;
+                width: 440px;
+                height: 220px;
+                top: 5px;
+                left: 5px;
+                position: absolute;
+                user-select: none;
+                border-radius: 18px;
+            }
+            #menu_name, #menu_time, #menu_jumps, #menu_falls {
+                color: rgba(200, 200, 200, 1);
+                font-size: 28px;
+                position: relative;
+                top: 10px;
+                left: 15px;
+            }
+            #menu_resume {
+                color: rgba(255, 220, 60, 1);
+                font-size: 28px;
+                position: absolute;
+                bottom: 10px;
+                left: 50px;
+            }
+            #menu_restart {
+                color: rgba(255, 255, 255, 1);
+                font-size: 28px;
+                position: absolute;
+                bottom: 10px;
+                right: 70px;
+            }
+            #menuBorderRestart {
+                background-color: rgba(255, 255, 255, 1);
+                display: none;
+                width: 270px;
+                height: 230px;
+                top: 20px;
+                right: 20px;
+                position: absolute;
+                user-select: none;
+                border: 5px solid rgba(0, 0, 0, 1);
+                border-radius: 25px;
+            }
+            #menuRestart {
+                background-color: rgba(0, 0 , 0, 1);
+                font-size: 32px;
+                text-align: center;
+                display: block;
+                width: 260px;
+                height: 220px;
+                top: 5px;
+                left: 5px;
+                position: absolute;
+                user-select: none;
+                border-radius: 18px;
+            }
+            #menuRestart_text {
+                color: rgba(255, 255, 255, 1);
+                position: absolute;
+                top: 30px;
+            }
+            #menuRestart_yes {
+                color: rgba(255, 255, 255, 1);
+                position: absolute;
+                left: 50px;
+                bottom: 30px;
+            }
+            #menuRestart_no {
+                color: rgba(255, 220, 60, 1);
+                position: absolute;
+                right: 50px;
+                bottom: 30px;
+            }
             #mapBackground {
                 display: none;
                 height: 100%;
@@ -96,14 +199,21 @@
                 height: 100%;
                 position: absolute;
             }
+            #rice {
+                display: none;
+                height: 100%;
+                position: absolute;
+            }
         </style>
     </head>
     <body>
-        <div id = 'text'>A - Left, D - Right, Space - Jump</div>
+        <div id = 'text'>A - Left, D - Right, Space - Jump, Esc - Menu</div>
         <img id = 'mapBackground' src = 'RiceKingBackground.png'>
         <img id = 'mapPlatforms' src = 'RiceKingPlatforms.png'>
+        <img id = 'rice' src = 'Rice.png'>
         <img id = 'playerTexture' src = 'RiceKingPlayer.png'>
         <canvas></canvas>
+
         <div id = 'loadingScreen'>
             <div id = 'loadingScreenContent'>
                 GAME LOADING
@@ -113,6 +223,27 @@
                 </div>
             </div>
         </div>
+
+        <div id = 'menuBg'>
+            <div id = 'menuBorder'>
+                <div id = 'menu'>
+                    <div id = 'menu_name'>The Forest</div>
+                    <div id = 'menu_time'>Time: 00d 00h 00m 00s</div>
+                    <div id = 'menu_jumps'>Jumps: 0</div>
+                    <div id = 'menu_falls'>Falls: 0</div>
+                    <div id = 'menu_resume'>Resume</div>
+                    <div id = 'menu_restart'>Restart</div>
+                </div>
+            </div>
+            <div id = 'menuBorderRestart'>
+                <div id = 'menuRestart'>
+                    <div id = 'menuRestart_text'>Are you sure you want to restart?</div>
+                    <div id = 'menuRestart_yes'>Yes</div>
+                    <div id = 'menuRestart_no'>No</div>
+                </div>
+            </div>
+        </div>
+
         <script src = 'playerMechanics.js'></script>
         <script src = 'playerAnimations.js'></script>
         <script src = 'levels.js'></script>

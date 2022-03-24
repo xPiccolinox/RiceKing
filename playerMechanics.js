@@ -94,12 +94,16 @@ function playerMechanics() {
                 player.move = 2
                 platform.color = 'rgba(0, 148, 227, 1)'
             }
+            player.y = platform.y - player.height + 0.1
             if (player.velocity.y >= 19) {
                 player.color = 'rgb(247, 119, 7)'
                 player.dizzy = true
+                dizzyParticles = []
+                for (let i = 0; i < 20; i++) {
+                    dizzyParticles.push(new DizzyParticle(i))
+                }
             }
             player.velocity.y = 0
-            player.y = platform.y - player.height + 0.1
             player.onPlatform = true
         }
         else if (playerPlatformCollisionFromBottom(player, platform)) {

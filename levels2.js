@@ -295,4 +295,6 @@ platforms.push(new Platform(620, 240, 100, 15, 42, 0))
 platforms.push(new Platform(700, 210, 20, 30, 42, 0))
 platforms.push(new Platform(220, 570, 60, 30, 42, 0))
 platforms.push(new Platform(220, 240, 400, 195, 42, 0))
+// Level 43 (as top limit)
+platforms.push(new Platform(0, 315, 800, 285, 43, 0))
 }
