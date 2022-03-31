@@ -14,6 +14,10 @@ const menuBg = document.getElementById('menuBg')
 const menu = document.getElementById('menuBorder')
 const menuResume = document.getElementById('menu_resume')
 const menuRestart = document.getElementById('menu_restart')
+const menu_name = document.getElementById('menu_name')
+const menu_time = document.getElementById('menu_time')
+const menu_jumps = document.getElementById('menu_jumps')
+const menu_falls = document.getElementById('menu_falls')
 const menu_restart = document.getElementById('menuBorderRestart')
 const menu_restartYes = document.getElementById('menuRestart_yes')
 const menu_restartNo = document.getElementById('menuRestart_no')
@@ -110,6 +114,12 @@ function save() {
     localStorage.setItem('save_vy', player.velocity.y)
     localStorage.setItem('save_level', player.level)
     localStorage.setItem('save_facingLeft', player.facingLeft)
+    localStorage.setItem('save_jumps', jumps)
+    localStorage.setItem('save_falls', falls)
+    localStorage.setItem('save_timeS', time.s)
+    localStorage.setItem('save_timeM', time.m)
+    localStorage.setItem('save_timeH', time.h)
+    localStorage.setItem('save_timeD', time.d)
 }
 
 // Player class
@@ -320,6 +330,7 @@ class Image {
         this.y = 0
         this.scroll = 42 - parseFloat(localStorage.getItem('save_level'))
         this.opacity = 1
+        this.hue = 0
     }
 
     draw() {
@@ -350,6 +361,7 @@ function animate() {
     player.update()
     platforms.forEach(platform => {
         platform.update()
+
     })
     slides.forEach(slide => {
         slide.update()
@@ -358,14 +370,15 @@ function animate() {
         wind.update()
     })
     mapPlatforms.update()
+    mapPlatforms.hue += 5
     windParticles.forEach(particle => {
         particle.update()
     })
     if (player.level === 0) {
-        text.innerText = 'A - Left, D - Right, Space - Jump, Esc - Menu'
+        text.innerHTML = 'A - Left, D - Right, </br> Space - Jump, Esc - Menu'
     }
     else {
-        text.innerText = `Level: ${player.level}`
+        text.innerHTML = `Level: ${player.level}`
     }
     windAcceleration += 0.018
     if (windAcceleration == Math.PI * 2) windAcceleration = 0
@@ -382,27 +395,51 @@ function animate() {
         menu_restart.style.top = '20px'
         menu_restart.style.bottom = 'auto'
     }
+    if (player.y <= 170 && player.x >= 570 && player.level === 42) gameReset()
+    menuScore()
     save()
 }
 
-// Initiate everything
+// Initiate
 function saveNaN() {
     return localStorage.length <= 0 ||
-        (localStorage.getItem('save_x') == 'NaN' &&
-        localStorage.getItem('save_y') == 'NaN' &&
-        localStorage.getItem('save_vx') == 'NaN' &&
-        localStorage.getItem('save_vy') == 'NaN' &&
-        localStorage.getItem('save_level') == 'NaN' &&
-        localStorage.getItem('save_facingLeft') == 'NaN')
+        (localStorage.getItem('save_x') == 'NaN' ||
+        localStorage.getItem('save_y') == 'NaN' ||
+        localStorage.getItem('save_vx') == 'NaN' ||
+        localStorage.getItem('save_vy') == 'NaN' ||
+        localStorage.getItem('save_level') == 'NaN' ||
+        localStorage.getItem('save_facingLeft') == 'NaN') ||
+        localStorage.getItem('save_jumps') == 'NaN' ||
+        localStorage.getItem('save_falls') == 'NaN' ||
+        localStorage.getItem('save_timeS') == 'NaN' ||
+        localStorage.getItem('save_timeM') == 'NaN' ||
+        localStorage.getItem('save_timeH') == 'NaN' ||
+        localStorage.getItem('save_timeD') == 'NaN'
 }
-if (saveNaN()) {
+if (saveNaN() || !localStorage) {
     localStorage.setItem('save_x', canvas.width / 2 - 20)
     localStorage.setItem('save_y', canvas.height / 5 * 4)
     localStorage.setItem('save_vx', 0.01)
     localStorage.setItem('save_vy', 0.01)
     localStorage.setItem('save_level', 0)
     localStorage.setItem('save_facingLeft', false)
+    localStorage.setItem('save_jumps', 0)
+    localStorage.setItem('save_falls', 0)
+    localStorage.setItem('save_timeS', 0)
+    localStorage.setItem('save_timeM', 0)
+    localStorage.setItem('save_timeH', 0)
+    localStorage.setItem('save_timeD', 0)
+    console.log('LOCAL STORAGE RESET')
 }
+
+let time = {
+    s: parseFloat(localStorage.getItem('save_timeS')),
+    m: parseFloat(localStorage.getItem('save_timeM')),
+    h: parseFloat(localStorage.getItem('save_timeH')),
+    d: parseFloat(localStorage.getItem('save_timeD'))
+}
+let jumps = parseFloat(localStorage.getItem('save_jumps'))
+let falls = parseFloat(localStorage.getItem('save_falls'))
 const mapBackground = new Image(mapBackgroundElement)
 player = new Player(parseFloat(localStorage.getItem('save_x')), parseFloat(localStorage.getItem('save_y')), parseFloat(localStorage.getItem('save_vx')), parseFloat(localStorage.getItem('save_vy')), parseFloat(localStorage.getItem('save_level')), localStorage.getItem('save_facingLeft'))
 const mapPlatforms = new Image(mapPlatformsElement)
@@ -412,239 +449,28 @@ for (let i = 0; i < 200; i++) {
 initPlatforms()
 initPlatforms2()
 
-// Loading
-let loadingProgress = 3
-function loadingOpacity() {
-    loadingScreen.style.animationPlayState = 'running'
-    animate()
-    cancelAnimationFrame(animationId)
-    setTimeout(animate, 2000)
-    setTimeout(function(){canOpenMenu = true}, 2000)
-}
-function loadingBarFull() {
-    loadingBarProgress.style.width = '0px'
-    if (loaded === false) setTimeout(loadingOpacity, 200)
-    loaded = true
-}
-function loadingBarProgressForward() {
-    loadingProgress -= 1
-    loadingBarProgress.style.width = `calc(196px * ${(loadingProgress + 1) / 4})`
-    if (loadingProgress == 0) setTimeout(loadingBarFull, 1000)
-}
-mapBackgroundElement.onload = function() {loadingBarProgressForward()}
-mapPlatformsElement.onload = function() {loadingBarProgressForward()}
-playerTexture.onload = function() {loadingBarProgressForward()}
-setTimeout(loadingBarFull, 5000)
-
-// Game Menu
-function gameMenu() {
-    if (canOpenMenu === true) {
-        if (menuOpen === false) {
-            menu.style.display = 'block'
-            cancelAnimationFrame(animationId)
-            menuOpen = true
-            restart = false
-            restartSelect = false
-            gameMenuHighlight()
+// Timer count
+function timer() {
+    if (menuOpen === false && canOpenMenu === true) {
+        time.s += 1
+        if (time.s >= 60) {
+            time.s = 0
+            time.m += 1
         }
-        else if (menuOpen === true) {
-            menu.style.display = 'none'
-            menu_restart.style.display = 'none'
-            requestAnimationFrame(animate)
-            gameMenuSelect()
-            menuOpen = false
-            menuRestartOpen = false
-            restart = false
-            restartSelect = false
+        if (time.m >= 60) {
+            time.m = 0
+            time.h += 1
+        }
+        if (time.h >= 24) {
+            time.h = 0
+            time.d += 1
+        }
+        if (time.d >= 100) {
+           time.s = 0
+           time.m = 0
+           time.h = 0
+           time.d = 0
         }
     }
 }
-function gameMenuSelect() {
-    if (menuOpen === true) {
-        if (keys.right.pressed && menuRestartOpen === false) {
-            restart = true
-            gameMenuHighlight()
-        }
-        else if (keys.left.pressed && menuRestartOpen === false) {
-            restart = false
-            gameMenuHighlight()
-        }
-        if (keys.right.pressed && menuRestartOpen === true) {
-            restartSelect = false
-            gameMenuHighlight()
-        }
-        else if (keys.left.pressed && menuRestartOpen === true) {
-            restartSelect = true
-            gameMenuHighlight()
-        }
-    }
-}
-function gameMenuRestart() {
-    if (menuOpen === true) {
-        if (restart === true && menuRestartOpen === false) {
-            menu_restart.style.display = 'block'
-            menuRestartOpen = true
-        }
-        else if (restart === false && menuRestartOpen === false) {
-            menu_restart.style.display = 'none'
-            menu.style.display = 'none'
-            menuOpen = false
-            menuRestartOpen = false
-            requestAnimationFrame(animate)
-        }
-        else if (restartSelect === true && menuRestartOpen === true) {
-            gameReset()
-        }
-        else if (restartSelect === false && menuRestartOpen === true) {
-            menu_restart.style.display = 'none'
-            restartSelect = false
-            menuRestartOpen = false
-        }
-    }
-}
-function gameMenuHighlight() {
-    if (restart === true) {
-        menuRestart.style.color = 'rgba(255, 220, 60, 1)'
-        menuResume.style.color = 'rgba(255, 255, 255, 1)'
-    }
-    else if (restart === false) {
-        menuRestart.style.color = 'rgba(255, 255, 255, 1)'
-        menuResume.style.color = 'rgba(255, 220, 60, 1)'
-    }
-    if (restartSelect === true) {
-        menu_restartYes.style.color = 'rgba(255, 220, 60, 1)'
-        menu_restartNo.style.color = 'rgba(255, 255, 255, 1)'
-    }
-    else if (restartSelect === false) {
-        menu_restartYes.style.color = 'rgba(255, 255, 255, 1)'
-        menu_restartNo.style.color = 'rgba(255, 220, 60, 1)'
-    }
-}
-function gameReset() {
-    cancelAnimationFrame(animationId)
-    canOpenMenu = false
-    menuOpen = false
-    menuRestartOpen = false
-    menu.style.display = 'none'
-    menu_restart.style.display = 'none'
-    menuBg.style.animationPlayState = 'running'
-    setTimeout(function() {
-        platforms.forEach (platform => {
-            platform.y -= 600 * player.level
-        })
-        slides.forEach (slide => {
-            slide.y1 -= 600 * player.level
-            slide.y2 -= 600 * player.level
-        })
-        winds.forEach(wind => {
-            wind.y -= 600 * player.level
-        })
-        mapPlatforms.scroll += player.level
-        mapBackground.scroll += player.level
-        player.level = 0
-        player.x = canvas.width / 2 - 20
-        player.y = canvas.height / 5 * 4
-        player.velocity.x = 0.01
-        player.velocity.y = 0.01
-        player.facingLeft = false
-        animate()
-        cancelAnimationFrame(animationId)
-    }, 2000)
-    setTimeout(function() {
-        menuBg.style.animationPlayState = 'paused'
-        canOpenMenu = true
-        animate()
-    }, 4000)
-}
-// DEV MODE - Press '/' to enable
-// "<" - Level Down
-// ">" - Level Up
-// "LMB" - Teleport Player to cursor's click location
-let devMode = false
-let gravityTimeout
-
-function gravityRestore() {
-    gravity = 0.6
-}
-
-function devModeLevelUp() {
-    if (devMode === true) {
-        platforms.forEach (platform => {
-            platform.y -= 600
-        })
-        slides.forEach (slide => {
-            slide.y1 -= 600
-            slide.y2 -= 600
-        })
-        winds.forEach(wind => {
-            wind.y -= 600
-        })
-        player.x = canvas.width / 2 - player.width / 2
-        player.y = canvas.height / 2 - player.height / 2
-        player.velocity.x = 0
-        player.velocity.y = 0
-        player.level -= 1
-        mapPlatforms.scroll += 1
-        mapBackground.scroll += 1
-        gravity = 0
-        clearTimeout(gravityTimeout)
-        gravityTimeout = setTimeout(gravityRestore, 2000)
-    }
-}
-
-function devModeLevelDown() {
-    if (devMode === true) {
-        platforms.forEach (platform => {
-            platform.y += 600
-        })
-        slides.forEach (slide => {
-            slide.y1 += 600
-            slide.y2 += 600
-        })
-        winds.forEach(wind => {
-            wind.y += 600
-        })
-        player.x = 400 - player.width / 2
-        player.y = 300 - player.height / 2
-        player.velocity.x = 0
-        player.velocity.y = 0
-        player.level += 1
-        mapPlatforms.scroll -= 1
-        mapBackground.scroll -= 1
-        gravity = 0
-        clearTimeout(gravityTimeout)
-        gravityTimeout = setTimeout(gravityRestore, 2000)
-    }
-}
-
-addEventListener('keypress', ({ keyCode }) => {
-    switch (keyCode) {
-        case 46:
-            devModeLevelDown()
-            break
-        case 44:
-            devModeLevelUp()
-            break
-        case 47:
-            devMode = !devMode
-            if (devMode === true) console.log('DevMode: Enabled')
-            else if (devMode === false) console.log('DevMode: Disabled')
-            break
-    }
-})
-
-addEventListener('click', (event) => {
-    const mouse = {
-        x: event.clientX - window.getComputedStyle(canvas).left.slice(0, window.getComputedStyle(canvas).left.indexOf('px')) + canvas.width / 2,
-        y: event.clientY - window.getComputedStyle(canvas).top.slice(0, window.getComputedStyle(canvas).top.indexOf('px')) + canvas.height / 2
-    }
-    if (devMode === true) {
-        player.x = mouse.x
-        player.y = mouse.y
-        player.velocity.x = 0.01
-        player.velocity.y = 0.01
-        gravity = 0
-        clearTimeout(gravityTimeout)
-        gravityTimeout = setTimeout(gravityRestore, 700)
-    }
-})
+setInterval(timer, 1000)

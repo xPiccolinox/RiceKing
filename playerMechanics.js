@@ -99,6 +99,7 @@ function playerMechanics() {
                 player.color = 'rgb(247, 119, 7)'
                 player.dizzy = true
                 dizzyParticles = []
+                falls += 1
                 for (let i = 0; i < 20; i++) {
                     dizzyParticles.push(new DizzyParticle(i))
                 }
@@ -394,7 +395,7 @@ function playerMechanics() {
             }
         }
     })
-    // Player movement if not dizzy
+    // Player movement (jump & run) if not dizzy
     if (player.dizzy === false) {
         // Player movement left & right
         function playerMoveLeft(keys, player) {
@@ -443,6 +444,7 @@ function playerMechanics() {
                 player.velocityCharge = 0
                 keys.space.pressed = false
                 player.jumpCharge = false
+                jumps += 1
             }
                 // Jump right
             else if (keys.space.pressed && keys.right.pressed && player.velocityCharge >= 18 && player.onPlatform === true) {
@@ -456,6 +458,7 @@ function playerMechanics() {
                 player.velocityCharge = 0
                 keys.space.pressed = false
                 player.jumpCharge = false
+                jumps += 1
             }
                 // Jump straight up (neither left or right is being hold)
             else if (keys.space.pressed && !keys.left.pressed && !keys.right.pressed && player.velocityCharge >= 18 && player.onPlatform === true) {
@@ -464,6 +467,7 @@ function playerMechanics() {
                 player.velocityCharge = 0
                 keys.space.pressed = false
                 player.jumpCharge = false
+                jumps += 1
             }
         }
         // Jump if 'SPACE' isn't being hold anymore
@@ -478,6 +482,7 @@ function playerMechanics() {
             player.color = 'red'
             player.velocityCharge = 0
             player.jumpCharge = false
+            jumps += 1
         }
             // Jump right
         else if (!keys.space.pressed && keys.right.pressed && player.velocityCharge > 0.5 && player.onPlatform === true) {
@@ -490,6 +495,7 @@ function playerMechanics() {
             player.color = 'red'
             player.velocityCharge = 0
             player.jumpCharge = false
+            jumps += 1
         }
             // Jump straight up
         else if (!keys.space.pressed && !keys.left.pressed && !keys.right.pressed && player.velocityCharge > 0.5 && player.onPlatform === true) {
@@ -498,6 +504,7 @@ function playerMechanics() {
             player.color = 'red'
             player.velocityCharge = 0
             player.jumpCharge = false
+            jumps += 1
         }
     }
     // Player dizzy for 2 seconds (can't do anything)
