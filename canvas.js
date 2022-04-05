@@ -60,6 +60,7 @@ let menuOpen = false
 let menuRestartOpen = false
 let restart = false
 let restartSelect = false
+let gamePaused = false
 
 //  Player movement buttons
 addEventListener('keydown', ({ keyCode }) => {
@@ -347,57 +348,62 @@ class Image {
 
 // Animate canvas
 function animate() {
-    animationId = requestAnimationFrame(animate)
-    c.save()
-    c.globalAlpha = 0.8
-    c.fillStyle = 'rgba(80, 80, 80, 1)'
-    c.fillRect(0, 0, canvas.width, canvas.height)
-    c.restore()
+    if (gamePaused === false) {
+        setTimeout(() => {
+            animationId = requestAnimationFrame(animate)
+            console.log(animationId)
+            c.save()
+            c.globalAlpha = 0.8
+            c.fillStyle = 'rgba(80, 80, 80, 1)'
+            c.fillRect(0, 0, canvas.width, canvas.height)
+            c.restore()
 
-    mapBackground.update()
-    dizzyParticles.forEach(particle => {
-        particle.update()
-    })
-    player.update()
-    platforms.forEach(platform => {
-        platform.update()
+            mapBackground.update()
+            dizzyParticles.forEach(particle => {
+                particle.update()
+            })
+            player.update()
+            platforms.forEach(platform => {
+                platform.update()
 
-    })
-    slides.forEach(slide => {
-        slide.update()
-    })
-    winds.forEach(wind => {
-        wind.update()
-    })
-    mapPlatforms.update()
-    mapPlatforms.hue += 5
-    windParticles.forEach(particle => {
-        particle.update()
-    })
-    if (player.level === 0) {
-        text.innerHTML = 'A - Left, D - Right, </br> Space - Jump, Esc - Menu'
+            })
+            slides.forEach(slide => {
+                slide.update()
+            })
+            winds.forEach(wind => {
+                wind.update()
+            })
+            mapPlatforms.update()
+            mapPlatforms.hue += 5
+            windParticles.forEach(particle => {
+                particle.update()
+            })
+            if (player.level === 0) {
+                text.innerHTML = 'A - Left, D - Right, </br> Space - Jump, Esc - Menu'
+            }
+            else {
+                text.innerHTML = `Level: ${player.level}`
+            }
+            windAcceleration += 0.018
+            if (windAcceleration == Math.PI * 2) windAcceleration = 0
+            windForce = Math.cos(windAcceleration) * 7
+            if (player.y <= 250 && player.x <= 480) {
+                menu.style.top = 'auto'
+                menu.style.bottom = '20px'
+                menu_restart.style.top = 'auto'
+                menu_restart.style.bottom = '20px'
+            }
+            else {
+                menu.style.top = '20px'
+                menu.style.bottom = 'auto'
+                menu_restart.style.top = '20px'
+                menu_restart.style.bottom = 'auto'
+            }
+            if (player.y <= 170 && player.x >= 570 && player.level === 42) gameReset()
+            menuScore()
+            save()
+        }, 1000 / 80)
     }
-    else {
-        text.innerHTML = `Level: ${player.level}`
-    }
-    windAcceleration += 0.018
-    if (windAcceleration == Math.PI * 2) windAcceleration = 0
-    windForce = Math.cos(windAcceleration) * 7
-    if (player.y <= 250 && player.x <= 480) {
-        menu.style.top = 'auto'
-        menu.style.bottom = '20px'
-        menu_restart.style.top = 'auto'
-        menu_restart.style.bottom = '20px'
-    }
-    else {
-        menu.style.top = '20px'
-        menu.style.bottom = 'auto'
-        menu_restart.style.top = '20px'
-        menu_restart.style.bottom = 'auto'
-    }
-    if (player.y <= 170 && player.x >= 570 && player.level === 42) gameReset()
-    menuScore()
-    save()
 }
 
 // Initiate

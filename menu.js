@@ -2,10 +2,14 @@
 let loadingProgress = 3
 function loadingOpacity() {
     loadingScreen.style.animationPlayState = 'running'
+    gamePaused = false
     animate()
-    cancelAnimationFrame(animationId)
-    setTimeout(animate, 2000)
-    setTimeout(function(){canOpenMenu = true}, 2000)
+    gamePaused = true
+    setTimeout(() => {
+        gamePaused = false
+        animate()
+    }, 2000)
+    setTimeout(() => {canOpenMenu = true}, 2000)
 }
 function loadingBarFull() {
     loadingBarProgress.style.width = '0px'
@@ -27,7 +31,7 @@ function gameMenu() {
     if (canOpenMenu === true) {
         if (menuOpen === false) {
             menu.style.display = 'block'
-            cancelAnimationFrame(animationId)
+            gamePaused = true
             menuOpen = true
             restart = false
             restartSelect = false
@@ -36,7 +40,8 @@ function gameMenu() {
         else if (menuOpen === true) {
             menu.style.display = 'none'
             menu_restart.style.display = 'none'
-            requestAnimationFrame(animate)
+            gamePaused = false
+            animate()
             gameMenuSelect()
             menuOpen = false
             menuRestartOpen = false
@@ -76,7 +81,8 @@ function gameMenuRestart() {
             menu.style.display = 'none'
             menuOpen = false
             menuRestartOpen = false
-            requestAnimationFrame(animate)
+            gamePaused = false
+            animate()
         }
         else if (restartSelect === true && menuRestartOpen === true) {
             gameReset()
@@ -107,7 +113,7 @@ function gameMenuHighlight() {
     }
 }
 function gameReset() {
-    cancelAnimationFrame(animationId)
+    gamePaused = true
     canOpenMenu = false
     menuOpen = false
     menuRestartOpen = false
@@ -141,12 +147,14 @@ function gameReset() {
             h: 0,
             d: 0
         }
+        gamePaused = false
         animate()
-        cancelAnimationFrame(animationId)
+        gamePaused = true
     }, 2000)
     setTimeout(function() {
         menuBg.style.animationPlayState = 'paused'
         canOpenMenu = true
+        gamePaused = false
         animate()
     }, 4000)
 }
