@@ -351,7 +351,6 @@ function animate() {
     if (gamePaused === false) {
         setTimeout(() => {
             animationId = requestAnimationFrame(animate)
-            console.log(animationId)
             c.save()
             c.globalAlpha = 0.8
             c.fillStyle = 'rgba(80, 80, 80, 1)'
