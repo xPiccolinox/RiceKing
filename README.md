@@ -1,5 +1,5 @@
 <div align="center">
-  <img src="ReadMeFiles/RiceKing_image.png" width="40%" style="border-radius: 24px">
+  <img src="ReadMeFiles/riceKing_image.png" width="40%" style="border-radius: 24px">
 </div>
 
 # Rice King
@@ -14,9 +14,9 @@ Files and the code itself look kinda messy but please bear in mind that it was m
 <br/><br/>
 <a href="https://github.com/xPiccolinox/RiceKingLevelCreator">
 
-> Also check out:
+> `Also check out:`
 >
-> <img src="ReadMeFiles/RiceKingLevelCreator_image.png" target="_blank" height="120px" style="border-radius: 16px">
+> <img src="ReadMeFiles/riceKingLevelCreator_image.png" target="_blank" height="120px" style="border-radius: 16px">
 
 </a>
 <br/>
@@ -48,15 +48,12 @@ DevMode is an in-game tool made to make game testing easier
 > <img src="ReadMeFiles/riceKing_mechanic_jump.gif" width="45%" alt="riceKing_mechanic_jump.gif">
 <br />  
 
- ## More mechanics
- 
-<div style="background-color: #303030; display: flex;">
-  <div style="display: flex; flex-direction: column; align-items: center">
-    <h3> Collision detection </h3>
-    <img src="ReadMeFiles/riceKing_mechanic_collision.gif" width="100%" alt="riceKing_mechanic_collision.gif">
-  </div> 
-  <div style="display: flex; flex-direction: column; align-items: center">
-    <h3> Slopes </h3>
-    <img src="ReadMeFiles/riceKing_mechanic_slopes.gif" width="45%" alt="riceKing_mechanic_slopes.gif">
-  </div>
-</div>
+> ## More mechanics
+> 
+> ### Collision detection
+>
+> <img src="ReadMeFiles/riceKing_mechanic_collision.gif" width="45%" alt="riceKing_mechanic_collision.gif">  
+> 
+> ### Slopes
+>
+> <img src="ReadMeFiles/riceKing_mechanic_slopes.gif" width="45%" alt="riceKing_mechanic_slopes.gif">
