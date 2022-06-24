@@ -1,5 +1,5 @@
 <div align="center">
-  <img src="ReadMeFiles/riceKing_image.png" width="40%" style="border-radius: 24px">
+  <img src="ReadMeFiles/riceKing_image.png" width="40%">
 </div>
 
 # Rice King
@@ -16,7 +16,7 @@ Files and the code itself look kinda messy but please bear in mind that it was m
 
 > `Also check out:`
 >
-> <img src="ReadMeFiles/riceKingLevelCreator_image.png" target="_blank" height="120px" style="border-radius: 16px">
+> <img src="ReadMeFiles/riceKingLevelCreator_image.png" target="_blank" height="120px">
 
 </a>
 <br/>
