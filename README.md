@@ -45,7 +45,6 @@ DevMode is an in-game tool made to make game testing easier
 > ## Basic movement 
 >
 > ### Moving
-> Just walking  
 >
 > <img src="ReadMeFiles/riceKing_mechanic_move.gif" width="400" alt="riceKing_mechanic_move.gif">  
 >
